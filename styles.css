@@ -105,6 +105,15 @@ body {
   letter-spacing: -0.02em;
 }
 
+.brand-lockup-text-only {
+  padding: 6px 0;
+}
+
+.footer-brand-text-only span {
+  font-size: 1rem;
+  color: var(--text);
+}
+
 .brand-type,
 .footer-brand span {
   font-size: 0.92rem;
@@ -255,39 +264,6 @@ h1 {
   background: linear-gradient(180deg, rgba(8, 16, 31, 0.78), rgba(19, 32, 61, 0.94));
 }
 
-.logo-slot {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  border: 1.5px dashed rgba(132, 235, 255, 0.35);
-  background: linear-gradient(180deg, rgba(63, 209, 255, 0.09), rgba(39, 69, 125, 0.18));
-  color: var(--cyan-bright);
-  font-size: 0.8rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.logo-slot-nav {
-  width: 180px;
-  height: 64px;
-  border-radius: 16px;
-  flex: 0 0 auto;
-}
-
-.logo-slot-hero {
-  width: 100%;
-  min-height: 240px;
-  border-radius: 22px;
-  margin-bottom: 20px;
-}
-
-.logo-slot-footer {
-  width: 140px;
-  height: 48px;
-  border-radius: 12px;
-}
 
 .hero-card h2,
 .section-heading h2 {
@@ -517,10 +493,5 @@ blockquote {
   .footer-brand {
     flex-direction: column;
     align-items: flex-start;
-  }
-
-  .logo-slot-nav,
-  .logo-slot-footer {
-    width: 100%;
   }
 }
