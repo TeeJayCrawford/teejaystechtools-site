@@ -100,7 +100,25 @@ blockquote { margin: 18px 0; font-size: 1.45rem; line-height: 1.5; letter-spacin
 .faq-item h2 { margin: 0 0 10px; font-size: 1.2rem; }
 .footer { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 22px 4px 0; }
 .footer p { margin: 0; }
+.signup-panel { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 22px; align-items: start; }
+.signup-placeholder-box, .archive-item, .resource-item { border-radius: 24px; border: 1px solid rgba(124, 167, 240, 0.16); background: linear-gradient(180deg, rgba(16, 29, 56, 0.84), rgba(9, 18, 36, 0.96)); }
+.signup-placeholder-box { padding: 24px; }
+.newsletter-hero-card { min-height: 100%; }
+.archive-list, .resource-list { display: grid; gap: 18px; margin-top: 24px; }
+.archive-item, .resource-item { padding: 24px; }
+.archive-item { display: flex; justify-content: space-between; gap: 18px; align-items: start; }
+.archive-item h3, .resource-item h3 { margin: 16px 0 10px; font-size: 1.2rem; }
+.archive-meta { display: grid; gap: 10px; min-width: 130px; text-align: right; color: var(--muted); font-weight: 600; }
+.issue-layout { display: grid; grid-template-columns: minmax(0, 1.1fr) 320px; gap: 22px; align-items: start; }
+.issue-meta-panel { padding-top: 22px; padding-bottom: 22px; }
+.issue-meta-tags { margin-top: 0; }
+.issue-content .issue-subheading { margin-top: 34px; }
+.issue-sidebar { display: grid; gap: 18px; }
+.newsletter-side-card strong { font-size: 1.05rem; }
 @media (max-width: 920px) {
+  .signup-panel, .issue-layout { grid-template-columns: 1fr; }
+  .archive-item { flex-direction: column; }
+  .archive-meta { text-align: left; }
   .hero-grid, .split, .card-grid, .two-col-copy, .contact-layout { grid-template-columns: 1fr; }
   .topbar, .contact-panel, .footer { flex-direction: column; align-items: flex-start; }
 }
