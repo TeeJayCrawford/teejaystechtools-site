@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#07101d" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="color-scheme" content="dark" />
@@ -49,7 +49,6 @@
               <div class="brand-type">Websites, local visibility, online stores, and practical small-business tech support</div>
             </div>
           </div>
-          <button class="menu-toggle" type="button" aria-expanded="false">Menu</button>
           <div class="nav-links">
             <a href="index.html" aria-current="page">Home</a>
             <a href="services.html">Services</a>
@@ -258,22 +257,6 @@
 
     <script>
       document.getElementById('year').textContent = new Date().getFullYear();
-    </script>
-      <script>
-      const toggle = document.querySelector('.menu-toggle');
-      const nav = document.querySelector('.nav-links');
-      if (toggle && nav) {
-        toggle.addEventListener('click', () => {
-          const open = nav.classList.toggle('is-open');
-          toggle.setAttribute('aria-expanded', String(open));
-          toggle.textContent = open ? 'Close' : 'Menu';
-        });
-        nav.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => {
-          nav.classList.remove('is-open');
-          toggle.setAttribute('aria-expanded', 'false');
-          toggle.textContent = 'Menu';
-        }));
-      }
     </script>
   </body>
 </html>
