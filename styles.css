@@ -32,12 +32,13 @@ body {
     linear-gradient(90deg, transparent 0%, rgba(132, 235, 255, 0.035) 50%, transparent 100%);
 }
 .site-bg::after {
-  content: ""; position: absolute; inset: 0; opacity: 0.22;
+  content: ""; position: absolute; inset: 0; opacity: 0.30;
   background-image:
-    linear-gradient(rgba(132, 235, 255, 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(132, 235, 255, 0.06) 1px, transparent 1px);
-  background-size: 44px 44px;
-  mask-image: radial-gradient(circle at center, black 22%, transparent 78%);
+    linear-gradient(rgba(132, 235, 255, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(132, 235, 255, 0.07) 1px, transparent 1px),
+    linear-gradient(180deg, transparent 0%, rgba(63, 209, 255, 0.03) 100%);
+  background-size: 42px 42px, 42px 42px, 100% 100%;
+  mask-image: radial-gradient(circle at center, black 28%, transparent 84%);
 }
 .page-shell { position: relative; width: min(1240px, calc(100% - 24px)); margin: 0 auto; padding: calc(env(safe-area-inset-top, 0px) + 8px) 0 56px; }
 .hero, .panel { border: 1px solid var(--border); border-radius: 28px; box-shadow: var(--shadow); backdrop-filter: blur(16px); position: relative; overflow: hidden; }
@@ -170,22 +171,33 @@ blockquote { margin: 18px 0; font-size: 1.45rem; line-height: 1.5; letter-spacin
 .issue-content .issue-subheading { margin-top: 34px; }
 .issue-sidebar { display: grid; gap: 18px; }
 .newsletter-side-card strong { font-size: 1.05rem; }
+.media-panel-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(320px, 0.95fr); gap: 24px; align-items: center; }
+.media-image-wrap { position: relative; }
+.section-image {
+  width: 100%; display: block; border-radius: 24px; min-height: 280px; max-height: 420px; object-fit: cover;
+  border: 1px solid rgba(132, 235, 255, 0.14); box-shadow: 0 18px 48px rgba(0,0,0,0.24);
+}
+.media-panel { background: linear-gradient(180deg, rgba(11,20,38,0.68), rgba(14,26,48,0.82)); }
 @media (max-width: 920px) {
   .signup-panel, .issue-layout, .hero-grid, .split, .card-grid, .two-col-copy, .contact-layout, .contact-panel { grid-template-columns: 1fr; }
   .archive-item { flex-direction: column; }
   .archive-meta { text-align: left; }
   .topbar, .footer { flex-direction: column; align-items: flex-start; }
 }
-@media (max-width: 640px) {
+@media (max-width: 820px) {
   .page-shell { width: min(100% - 16px, 1240px); }
   .hero, .panel { padding: 20px; border-radius: 22px; }
   h1 { font-size: 2.55rem; }
   .brand-lockup, .footer-brand { flex-direction: column; align-items: flex-start; }
-  .menu-toggle { display: inline-flex; align-items: center; justify-content: center; }
+  .topbar { align-items: stretch; }
+  .menu-toggle { display: inline-flex; align-items: center; justify-content: center; width: 100%; margin-top: 6px; }
   .nav-links {
-    display: none; width: 100%; flex-direction: column; gap: 8px; padding: 8px;
+    display: none; width: 100%; flex-direction: column; gap: 10px; padding: 10px; margin-top: 10px;
+    border-radius: 22px; background: rgba(7, 17, 32, 0.92); border: 1px solid rgba(132, 235, 255, 0.14);
+    box-shadow: 0 18px 44px rgba(0,0,0,0.28);
   }
   .nav-links.is-open { display: flex; }
-  .nav-links a { width: 100%; text-align: left; padding: 14px 16px; }
+  .nav-links a { width: 100%; text-align: left; padding: 16px 18px; font-size: 1.02rem; background: rgba(255,255,255,0.03); }
   .cta-row .button, .cta-stack .button, .button.large { width: 100%; min-width: 0; }
+  .media-panel-grid { grid-template-columns: 1fr; }
 }
