@@ -18,6 +18,7 @@ body {
   color: var(--text);
   background: linear-gradient(180deg, var(--bg) 0%, #0c1730 52%, #08111f 100%);
   min-height: 100vh;
+  overflow-x: hidden;
 }
 .site-bg {
   position: fixed; inset: 0; pointer-events: none;
@@ -36,6 +37,17 @@ body {
   mask-image: radial-gradient(circle at center, black 22%, transparent 78%);
 }
 .page-shell { position: relative; width: min(1160px, calc(100% - 32px)); margin: 0 auto; padding: 24px 0 56px; }
+.full-bleed-shell {
+  width: 100%; max-width: none; padding: 0 0 56px;
+}
+.full-bleed-shell > .hero,
+.full-bleed-shell > main,
+.full-bleed-shell > .footer {
+  width: min(1160px, calc(100% - 32px)); margin-left: auto; margin-right: auto;
+}
+.full-bleed-shell > .hero {
+  border-radius: 0 0 28px 28px; margin-top: 0; padding-top: calc(env(safe-area-inset-top, 0px) + 24px);
+}
 .hero, .panel { border: 1px solid var(--border); border-radius: 28px; box-shadow: var(--shadow); backdrop-filter: blur(12px); position: relative; overflow: hidden; }
 .hero::before, .panel::before {
   content: ""; position: absolute; inset: 0; pointer-events: none;
@@ -177,7 +189,13 @@ blockquote { margin: 18px 0; font-size: 1.45rem; line-height: 1.5; letter-spacin
 }
 @media (max-width: 720px) {
   .page-shell { width: min(100% - 16px, 1160px); }
+  .full-bleed-shell > .hero,
+  .full-bleed-shell > main,
+  .full-bleed-shell > .footer {
+    width: min(100% - 16px, 1160px);
+  }
   .hero, .panel { padding: 20px; border-radius: 22px; }
+  .full-bleed-shell > .hero { border-radius: 0 0 22px 22px; }
   h1 { font-size: 2.55rem; }
   .brand-lockup, .footer-brand { flex-direction: column; align-items: flex-start; }
   .menu-toggle { display: inline-flex; align-items: center; justify-content: center; width: 100%; }
