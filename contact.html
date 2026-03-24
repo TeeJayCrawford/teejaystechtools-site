@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#07101d" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="color-scheme" content="dark" />
@@ -31,6 +31,7 @@
               <div class="brand-type">Request consulting or hands-on project help</div>
             </div>
           </a>
+          <button class="menu-toggle" type="button" aria-expanded="false">Menu</button>
           <div class="nav-links">
             <a href="index.html">Home</a>
             <a href="services.html">Services</a>
@@ -75,5 +76,21 @@
 
       <footer class="footer"><div class="footer-brand footer-brand-text-only"><span>TeeJay's Tech Tools</span></div><p>Farmington, Missouri · <a href="tel:5738541909">573-854-1909</a></p></footer>
     </div>
+      <script>
+      const toggle = document.querySelector('.menu-toggle');
+      const nav = document.querySelector('.nav-links');
+      if (toggle && nav) {
+        toggle.addEventListener('click', () => {
+          const open = nav.classList.toggle('is-open');
+          toggle.setAttribute('aria-expanded', String(open));
+          toggle.textContent = open ? 'Close' : 'Menu';
+        });
+        nav.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => {
+          nav.classList.remove('is-open');
+          toggle.setAttribute('aria-expanded', 'false');
+          toggle.textContent = 'Menu';
+        }));
+      }
+    </script>
   </body>
 </html>
