@@ -50,10 +50,6 @@ body {
 }
 .brand-kicker { font-size: 1.1rem; font-weight: 800; letter-spacing: -0.02em; }
 .brand-sub { margin-top: 4px; color: var(--muted); font-size: 0.92rem; }
-.menu-toggle {
-  display: none; min-height: 46px; padding: 0 16px; border-radius: 14px; border: 1px solid rgba(132, 235, 255, 0.14);
-  background: rgba(255,255,255,0.05); color: var(--text); font: inherit; font-weight: 800;
-}
 .nav {
   display: flex; gap: 10px; flex-wrap: wrap; padding: 6px;
   border: 1px solid rgba(132, 235, 255, 0.08); border-radius: 18px;
@@ -151,12 +147,8 @@ ul { padding-left: 18px; }
   .hero, .media-band, .contact-strip, .audience-band { padding: 20px; }
   h1 { font-size: 2.55rem; }
   .hero-visual-card { left: 18px; right: 18px; bottom: 18px; }
-  .menu-toggle { display: inline-flex; align-items: center; justify-content: center; }
-  .nav {
-    display: none; width: 100%; flex-direction: column; gap: 8px; padding: 8px; border-radius: 18px;
-  }
-  .nav.is-open { display: flex; }
-  .nav a { width: 100%; text-align: left; padding: 14px 16px; }
+  .nav { width: 100%; }
+  .nav a { flex: 1 1 calc(50% - 8px); text-align: center; }
   .btn { width: 100%; }
   .actions { width: 100%; }
 }
