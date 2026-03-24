@@ -43,11 +43,17 @@ body {
 }
 .hero { padding: 28px; background: linear-gradient(135deg, rgba(11, 23, 45, 0.96), rgba(18, 35, 69, 0.84)); }
 .hero-compact { padding-bottom: 34px; }
-.topbar { display: flex; justify-content: space-between; gap: 20px; align-items: center; margin-bottom: 38px; position: relative; z-index: 1; }
+.topbar {
+  display: flex; flex-direction: column; gap: 16px; align-items: stretch; margin-bottom: 38px; position: relative; z-index: 1;
+}
 .brand-lockup, .footer-brand { display: flex; align-items: center; gap: 16px; }
 .brand-link, .text-link { text-decoration: none; color: inherit; }
+.menu-toggle {
+  display: none; min-height: 48px; padding: 0 16px; border-radius: 16px; border: 1px solid rgba(132, 235, 255, 0.14);
+  background: rgba(255,255,255,0.05); color: var(--text); font: inherit; font-weight: 800;
+}
 .nav-links {
-  display: flex; gap: 10px; flex-wrap: wrap; padding: 8px;
+  display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; padding: 8px;
   border: 1px solid rgba(132, 235, 255, 0.12); border-radius: 18px;
   background: rgba(8, 16, 31, 0.38); box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
 }
@@ -167,14 +173,20 @@ blockquote { margin: 18px 0; font-size: 1.45rem; line-height: 1.5; letter-spacin
   .archive-item { flex-direction: column; }
   .archive-meta { text-align: left; }
   .hero-grid, .split, .card-grid, .two-col-copy, .contact-layout { grid-template-columns: 1fr; }
-  .topbar, .contact-panel, .footer { flex-direction: column; align-items: flex-start; }
+  .contact-panel, .footer { flex-direction: column; align-items: flex-start; }
 }
-@media (max-width: 640px) {
-  .page-shell { width: min(100% - 20px, 1160px); }
-  .hero, .panel { padding: 22px; border-radius: 22px; }
-  h1 { font-size: 2.7rem; }
+@media (max-width: 720px) {
+  .page-shell { width: min(100% - 16px, 1160px); }
+  .hero, .panel { padding: 20px; border-radius: 22px; }
+  h1 { font-size: 2.55rem; }
   .brand-lockup, .footer-brand { flex-direction: column; align-items: flex-start; }
-  .brand-logo { width: min(220px, 100%); }
-  .newsletter-mark { width: 84px; height: 84px; }
-  .hero-brand-image { width: min(100%, 320px); }
+  .menu-toggle { display: inline-flex; align-items: center; justify-content: center; width: 100%; }
+  .nav-links {
+    display: none; width: 100%; flex-direction: column; gap: 10px; justify-content: flex-start;
+    padding: 10px; border-radius: 20px; background: rgba(7,17,32,0.92);
+    border: 1px solid rgba(132, 235, 255, 0.16); box-shadow: 0 18px 44px rgba(0,0,0,0.22);
+  }
+  .nav-links.is-open { display: flex; }
+  .nav-links a { width: 100%; text-align: left; padding: 15px 16px; font-size: 1rem; }
+  .cta-row .button, .cta-stack .button, .button.large { width: 100%; min-width: 0; }
 }

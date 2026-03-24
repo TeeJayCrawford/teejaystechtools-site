@@ -23,7 +23,8 @@
     <header class="hero hero-compact">
       <nav class="topbar">
         <a class="brand-lockup brand-link brand-lockup-text-only" href="index.html"><div><div class="brand-name">TeeJay's Tech Tools</div><div class="brand-type">Small business websites that actually help you win customers</div></div></a>
-        <div class="nav-links"><a href="index.html">Home</a><a href="services.html">Services</a><a href="newsletter/">Newsletter</a><a href="contact.html">Contact</a></div>
+        <button class="menu-toggle" type="button" aria-expanded="false">Menu</button>
+          <div class="nav-links"><a href="index.html">Home</a><a href="services.html">Services</a><a href="newsletter/">Newsletter</a><a href="contact.html">Contact</a></div>
       </nav>
       <div class="section-heading"><span>Website design</span><h1>Small business websites built to make you look credible and make customers take action.</h1></div>
       <p class="lead">A local business website should answer the big customer questions fast: what you do, where you work, why people should trust you, and how to contact you. That is the goal here.</p>
@@ -34,5 +35,21 @@
       <section class="panel contact-panel"><div><div class="section-heading"><span>Need a website?</span><h2>Let’s build something better than a generic template.</h2></div><p>If your current site feels outdated, thin, confusing, or invisible, this is a good place to start.</p></div><div class="cta-stack"><a class="button primary large" href="contact.html">Request website help</a></div></section>
     </main>
   </div>
-</body>
+    <script>
+      const toggle = document.querySelector('.menu-toggle');
+      const nav = document.querySelector('.nav-links');
+      if (toggle && nav) {
+        toggle.addEventListener('click', () => {
+          const open = nav.classList.toggle('is-open');
+          toggle.setAttribute('aria-expanded', String(open));
+          toggle.textContent = open ? 'Close menu' : 'Menu';
+        });
+        nav.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => {
+          nav.classList.remove('is-open');
+          toggle.setAttribute('aria-expanded', 'false');
+          toggle.textContent = 'Menu';
+        }));
+      }
+    </script>
+  </body>
 </html>

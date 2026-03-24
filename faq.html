@@ -31,6 +31,7 @@
               <div class="brand-type">Answers for local business website and visibility projects</div>
             </div>
           </a>
+          <button class="menu-toggle" type="button" aria-expanded="false">Menu</button>
           <div class="nav-links">
             <a href="index.html">Home</a>
             <a href="services.html">Services</a>
@@ -55,5 +56,21 @@
 
       <footer class="footer"><div class="footer-brand footer-brand-text-only"><span>TeeJay's Tech Tools</span></div><p>Need a direct answer? <a href="contact.html">Reach out here</a></p></footer>
     </div>
+      <script>
+      const toggle = document.querySelector('.menu-toggle');
+      const nav = document.querySelector('.nav-links');
+      if (toggle && nav) {
+        toggle.addEventListener('click', () => {
+          const open = nav.classList.toggle('is-open');
+          toggle.setAttribute('aria-expanded', String(open));
+          toggle.textContent = open ? 'Close menu' : 'Menu';
+        });
+        nav.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => {
+          nav.classList.remove('is-open');
+          toggle.setAttribute('aria-expanded', 'false');
+          toggle.textContent = 'Menu';
+        }));
+      }
+    </script>
   </body>
 </html>
