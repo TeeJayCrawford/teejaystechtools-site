@@ -10,18 +10,38 @@
   const nav = document.querySelector('.primary-nav');
 
   if (menuButton && nav) {
-    menuButton.addEventListener('click', function () {
-      const open = nav.classList.toggle('is-open');
+    const menuLabel = menuButton.querySelector('[data-menu-label]');
+
+    function updateMenuLabel(text) {
+      if (menuLabel) {
+        menuLabel.textContent = text;
+        return;
+      }
+      const textNode = Array.from(menuButton.childNodes).reverse().find(function (node) {
+        return node.nodeType === Node.TEXT_NODE;
+      });
+      if (textNode) textNode.textContent = ' ' + text;
+    }
+
+    function setMenuState(open) {
+      nav.classList.toggle('is-open', open);
       menuButton.setAttribute('aria-expanded', String(open));
-      menuButton.lastChild.textContent = open ? ' Close' : ' Menu';
+      menuButton.setAttribute('aria-label', open ? 'Close navigation menu' : 'Open navigation menu');
+      updateMenuLabel(open ? 'Close' : 'Menu');
+    }
+
+    menuButton.addEventListener('click', function () {
+      setMenuState(!nav.classList.contains('is-open'));
     });
 
     nav.querySelectorAll('a').forEach(function (link) {
       link.addEventListener('click', function () {
-        nav.classList.remove('is-open');
-        menuButton.setAttribute('aria-expanded', 'false');
-        menuButton.lastChild.textContent = ' Menu';
+        setMenuState(false);
       });
+    });
+
+    window.addEventListener('resize', function () {
+      if (window.innerWidth > 980) setMenuState(false);
     });
   }
 
@@ -45,6 +65,64 @@
       });
     });
   });
+
+  const productFilter = document.querySelector('[data-product-filter]');
+  if (productFilter) {
+    const filterButtons = Array.from(productFilter.querySelectorAll('[data-product-filter-value]'));
+    const productRows = Array.from(document.querySelectorAll('[data-product-category]'));
+    const businessSection = document.querySelector('[data-product-section-category="small-business"]');
+    const emptyState = document.querySelector('[data-filter-empty]');
+
+    function applyProductFilter(value) {
+      let visibleCount = 0;
+      productRows.forEach(function (row) {
+        const categories = (row.getAttribute('data-product-category') || '').split(/\s+/);
+        const visible = value === 'all' || categories.includes(value);
+        row.hidden = !visible;
+        if (visible) visibleCount += 1;
+      });
+
+      if (businessSection) businessSection.hidden = !(value === 'all' || value === 'small-business');
+      if (emptyState) emptyState.hidden = visibleCount > 0 || value === 'small-business';
+
+      filterButtons.forEach(function (button) {
+        const active = button.getAttribute('data-product-filter-value') === value;
+        button.classList.toggle('is-active', active);
+        button.setAttribute('aria-pressed', String(active));
+      });
+    }
+
+    filterButtons.forEach(function (button) {
+      button.addEventListener('click', function () {
+        applyProductFilter(button.getAttribute('data-product-filter-value') || 'all');
+      });
+    });
+  }
+
+  const commandFilter = document.querySelector('[data-command-filter]');
+  if (commandFilter) {
+    const commandButtons = Array.from(commandFilter.querySelectorAll('[data-command-filter-value]'));
+    const commandRows = Array.from(document.querySelectorAll('[data-command-status]'));
+
+    function applyCommandFilter(value) {
+      commandRows.forEach(function (row) {
+        const statuses = (row.getAttribute('data-command-status') || '').split(/\s+/);
+        row.hidden = value !== 'all' && !statuses.includes(value);
+      });
+
+      commandButtons.forEach(function (button) {
+        const active = button.getAttribute('data-command-filter-value') === value;
+        button.classList.toggle('is-active', active);
+        button.setAttribute('aria-pressed', String(active));
+      });
+    }
+
+    commandButtons.forEach(function (button) {
+      button.addEventListener('click', function () {
+        applyCommandFilter(button.getAttribute('data-command-filter-value') || 'all');
+      });
+    });
+  }
 
   const intakeForm = document.querySelector('[data-intake-form]');
   if (intakeForm) {
