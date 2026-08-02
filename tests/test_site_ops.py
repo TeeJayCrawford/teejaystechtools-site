@@ -45,7 +45,24 @@ class SiteOpsTests(unittest.TestCase):
         self.assertIn("navigator.globalPrivacyControl === true", source)
         self.assertIn("analytics_storage: 'denied'", source)
         self.assertIn("ad_storage: 'denied'", source)
-        self.assertIn("effectiveChoice() !== 'allow'", source)
+        self.assertIn("advertising: Boolean(requested.advertising) && !gpcEnabled", source)
+        self.assertIn("if (effective.analytics)", source)
+
+    def test_privacy_runtime_matches_reference_preference_flow(self):
+        root = Path(__file__).resolve().parents[1]
+        source = (root / "privacy.js").read_text(encoding="utf-8")
+        self.assertIn("Choose how TeeJay\\'s Tech Tools uses cookies.", source)
+        self.assertIn("Control optional cookies", source)
+        self.assertIn("Reject non-essential", source)
+        self.assertIn("Manage choices", source)
+        self.assertIn("Booking &amp; payment tools", source)
+        for asset in (
+            "privacy-shield-check.svg",
+            "privacy-cookie.svg",
+            "privacy-close.svg",
+            "privacy-chevron-right.svg",
+        ):
+            self.assertTrue((root / "assets" / asset).exists(), asset)
 
 
 if __name__ == "__main__":

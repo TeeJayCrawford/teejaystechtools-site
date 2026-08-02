@@ -8,7 +8,21 @@
     ? new URL(document.currentScript.src)
     : new URL('/privacy.js', window.location.origin);
   const privacyUrl = new URL('privacy.html', scriptUrl).href;
+  const assetUrl = function (filename) {
+    return new URL('assets/' + filename, scriptUrl).href;
+  };
   const gpcEnabled = navigator.globalPrivacyControl === true;
+  const deniedPreferences = { analytics: false, advertising: false };
+
+  let analyticsLoaded = false;
+  let banner;
+  let backdrop;
+  let trigger;
+  let closeButton;
+  let analyticsInput;
+  let advertisingInput;
+  let draft = { analytics: false, advertising: false };
+  let lastPrivacyControl;
 
   window.dataLayer = window.dataLayer || [];
   window.gtag = window.gtag || function () {
@@ -21,60 +35,115 @@
     ad_personalization: 'denied',
     analytics_storage: 'denied',
     functionality_storage: 'granted',
+    personalization_storage: 'denied',
     security_storage: 'granted'
   });
   window.gtag('set', 'ads_data_redaction', true);
   window.gtag('set', 'url_passthrough', false);
 
-  function readChoice() {
-    const entry = document.cookie.split('; ').find(function (item) {
-      return item.indexOf(CHOICE_COOKIE + '=') === 0;
-    });
-    if (!entry) return null;
-    const value = decodeURIComponent(entry.split('=').slice(1).join('='));
-    return value === 'allow' || value === 'reject' ? value : null;
+  function privacyCookieDomain() {
+    const hostname = window.location.hostname.toLowerCase();
+    return hostname === 'teejaystechtools.com' || hostname.endsWith('.teejaystechtools.com')
+      ? '; Domain=.teejaystechtools.com'
+      : '';
   }
 
-  function saveChoice(choice) {
-    document.cookie = CHOICE_COOKIE + '=' + encodeURIComponent(choice)
+  function readPreferences() {
+    const encoded = document.cookie.split(';').map(function (entry) {
+      return entry.trim();
+    }).find(function (entry) {
+      return entry.indexOf(CHOICE_COOKIE + '=') === 0;
+    });
+    if (!encoded) return null;
+
+    const value = decodeURIComponent(encoded.slice(CHOICE_COOKIE.length + 1));
+    if (value === 'allow' || value === 'reject') {
+      return {
+        analytics: value === 'allow',
+        advertising: false,
+        gpc: false,
+        savedAt: '',
+        version: 1
+      };
+    }
+
+    try {
+      const parsed = JSON.parse(value);
+      if (
+        parsed.version !== 1
+        || typeof parsed.analytics !== 'boolean'
+        || typeof parsed.advertising !== 'boolean'
+        || typeof parsed.gpc !== 'boolean'
+        || typeof parsed.savedAt !== 'string'
+      ) return null;
+      return parsed;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function writePreferences(preferences) {
+    const value = encodeURIComponent(JSON.stringify({
+      analytics: preferences.analytics,
+      advertising: preferences.advertising,
+      gpc: gpcEnabled,
+      savedAt: new Date().toISOString(),
+      version: 1
+    }));
+    const secure = window.location.protocol === 'https:' ? '; Secure' : '';
+
+    // Remove a legacy host-only cookie before writing the shared apex/www cookie.
+    document.cookie = CHOICE_COOKIE + '=; Max-Age=0; Path=/; SameSite=Lax' + secure;
+    document.cookie = CHOICE_COOKIE + '=' + value
       + '; Max-Age=' + CHOICE_MAX_AGE
-      + '; Path=/; SameSite=Lax; Secure';
+      + '; Path=/; SameSite=Lax'
+      + privacyCookieDomain()
+      + secure;
   }
 
-  function effectiveChoice() {
-    if (gpcEnabled) return 'reject';
-    return readChoice();
-  }
-
-  function deleteAnalyticsCookies() {
-    const analyticsCookies = document.cookie.split(';').map(function (item) {
-      return item.trim().split('=')[0];
+  function deleteOptionalGoogleCookies() {
+    const names = document.cookie.split(';').map(function (entry) {
+      return entry.trim().split('=')[0];
     }).filter(function (name) {
-      return name === '_ga' || name === '_gid' || name === '_gat' || name.indexOf('_ga_') === 0;
+      return /^_(?:ga|gid|gat|gac_|gcl_)/i.test(name);
     });
-    const rootDomain = window.location.hostname.replace(/^www\./, '');
+    const hostname = window.location.hostname.toLowerCase();
+    const domains = ['', hostname];
+    if (hostname === 'teejaystechtools.com' || hostname.endsWith('.teejaystechtools.com')) {
+      domains.push('.teejaystechtools.com');
+    }
 
-    analyticsCookies.forEach(function (name) {
-      document.cookie = name + '=; Max-Age=0; Path=/; SameSite=Lax; Secure';
-      if (rootDomain && rootDomain.indexOf('.') !== -1) {
-        document.cookie = name + '=; Max-Age=0; Path=/; Domain=.' + rootDomain + '; SameSite=Lax; Secure';
-      }
+    names.forEach(function (name) {
+      domains.forEach(function (domain) {
+        document.cookie = name + '=; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Max-Age=0; Path=/'
+          + (domain ? '; Domain=' + domain : '') + '; SameSite=Lax';
+      });
     });
   }
 
-  function updateGoogleConsent(analyticsAllowed) {
+  function effectivePreferences(requested) {
+    return {
+      analytics: Boolean(requested.analytics),
+      advertising: Boolean(requested.advertising) && !gpcEnabled
+    };
+  }
+
+  function updateGoogleConsent(preferences) {
     window.gtag('consent', 'update', {
-      analytics_storage: analyticsAllowed ? 'granted' : 'denied',
-      ad_storage: 'denied',
-      ad_user_data: 'denied',
-      ad_personalization: 'denied'
+      analytics_storage: preferences.analytics ? 'granted' : 'denied',
+      ad_storage: preferences.advertising ? 'granted' : 'denied',
+      ad_user_data: preferences.advertising ? 'granted' : 'denied',
+      ad_personalization: preferences.advertising ? 'granted' : 'denied',
+      functionality_storage: 'granted',
+      personalization_storage: 'denied',
+      security_storage: 'granted'
     });
   }
 
   function loadAnalytics() {
-    if (window.__tttAnalyticsLoaded || effectiveChoice() !== 'allow') return;
+    if (analyticsLoaded || document.querySelector('script[data-optional-analytics="true"]')) return;
+    analyticsLoaded = true;
     window.__tttAnalyticsLoaded = true;
-    updateGoogleConsent(true);
     window.gtag('js', new Date());
     window.gtag('config', ANALYTICS_ID, {
       anonymize_ip: true,
@@ -90,134 +159,201 @@
     document.head.appendChild(analyticsScript);
   }
 
+  function applyPreferences(requested) {
+    const effective = effectivePreferences(requested);
+    updateGoogleConsent(effective);
+    if (effective.analytics) {
+      loadAnalytics();
+    } else {
+      window.__tttAnalyticsLoaded = false;
+      deleteOptionalGoogleCookies();
+    }
+    return effective;
+  }
+
   function track(eventName, parameters) {
-    if (effectiveChoice() !== 'allow' || !window.__tttAnalyticsLoaded) return;
+    const stored = readPreferences();
+    if (!stored || !stored.analytics || !window.__tttAnalyticsLoaded) return;
     window.gtag('event', eventName, parameters || {});
   }
 
   window.TTTAnalytics = { track: track };
 
-  function buildPrivacyPanel() {
-    const panel = document.createElement('section');
-    panel.className = 'privacy-panel';
-    panel.hidden = true;
-    panel.tabIndex = -1;
-    panel.setAttribute('role', 'dialog');
-    panel.setAttribute('aria-modal', 'false');
-    panel.setAttribute('aria-labelledby', 'privacy-panel-title');
-    panel.innerHTML = '<div class="privacy-panel-copy">'
-      + '<span class="privacy-kicker">Privacy choices</span>'
-      + '<h2 id="privacy-panel-title">Optional analytics are your choice.</h2>'
-      + '<p data-privacy-message></p>'
-      + '<p class="privacy-detail">We use one necessary cookie to remember your choice for 12 months. Advertising storage and personalization stay off.</p>'
-      + '<a class="privacy-policy-link" href="' + privacyUrl + '#notice-at-collection">Read the privacy notice</a>'
-      + '</div>'
-      + '<div class="privacy-panel-actions" data-privacy-actions></div>';
-    document.body.appendChild(panel);
-    return panel;
+  function icon(filename, className) {
+    return '<img alt="" aria-hidden="true" class="' + className + '" src="'
+      + assetUrl(filename) + '" />';
   }
 
-  function privacyButton(label, action) {
+  function buildBanner() {
+    const section = document.createElement('section');
+    section.className = 'privacy-banner';
+    section.hidden = true;
+    section.setAttribute('aria-label', 'Privacy choices');
+    section.innerHTML = '<div class="privacy-banner-icon">'
+      + icon('privacy-shield-check.svg', 'privacy-icon')
+      + '</div><div class="privacy-banner-copy">'
+      + '<span class="privacy-kicker">YOUR PRIVACY, YOUR CHOICE</span>'
+      + '<h2>Choose how TeeJay\'s Tech Tools uses cookies.</h2>'
+      + '<p>Essential cookies keep the site secure and remember your choice. Analytics and advertising stay off unless you allow them. Square scheduling and checkout load only when you choose those services. Read our <a href="'
+      + privacyUrl + '#website-analytics">Cookie &amp; Privacy Policy</a>.</p>'
+      + (gpcEnabled
+        ? '<strong class="privacy-gpc-notice">' + icon('privacy-shield-check.svg', 'privacy-inline-icon') + 'Global Privacy Control detected and honored. Advertising remains off.</strong>'
+        : '')
+      + '</div><div class="privacy-banner-actions">'
+      + '<button data-privacy-action="accept" type="button">' + (gpcEnabled ? 'Allow analytics' : 'Accept all') + '</button>'
+      + '<button data-privacy-action="reject" type="button">Reject non-essential</button>'
+      + '<button class="privacy-manage-button" data-privacy-action="manage" type="button">Manage choices '
+      + icon('privacy-chevron-right.svg', 'privacy-chevron-icon') + '</button>'
+      + '</div>';
+    document.body.appendChild(section);
+    return section;
+  }
+
+  function preferenceRow(id, label, description, options) {
+    return '<label class="privacy-preference-row" for="' + id + '"><span><strong>' + label
+      + '</strong><small>' + description + '</small></span><input id="' + id + '" type="checkbox"'
+      + (options.checked ? ' checked' : '') + (options.disabled ? ' disabled' : '')
+      + ' /><i aria-hidden="true"></i></label>';
+  }
+
+  function buildPreferencesDialog() {
+    const layer = document.createElement('div');
+    layer.className = 'privacy-backdrop';
+    layer.hidden = true;
+    layer.innerHTML = '<section aria-describedby="privacy-dialog-description" aria-labelledby="privacy-dialog-title" aria-modal="true" class="privacy-dialog" role="dialog">'
+      + '<header><div><span class="privacy-kicker">PRIVACY PREFERENCES</span><h2 id="privacy-dialog-title">Control optional cookies</h2></div>'
+      + '<button aria-label="Close privacy choices" class="privacy-dialog-close" data-privacy-action="close" type="button">'
+      + icon('privacy-close.svg', 'privacy-close-icon') + '</button></header>'
+      + '<p class="privacy-dialog-intro" id="privacy-dialog-description">Turning a category off updates Google Consent Mode immediately and removes first-party Google measurement cookies that this site can access. Essential security and preference storage cannot be disabled.</p>'
+      + (gpcEnabled
+        ? '<div class="privacy-gpc-card" role="status">' + icon('privacy-shield-check.svg', 'privacy-card-icon') + '<span><strong>Global Privacy Control is active.</strong>We are treating it as a request to opt out of sale, sharing, profiling, and advertising cookies.</span></div>'
+        : '')
+      + '<div class="privacy-preference-list">'
+      + preferenceRow('privacy-essential', 'Essential', 'Required for site security and remembering this privacy choice.', { checked: true, disabled: true })
+      + preferenceRow('privacy-service-tools', 'Booking &amp; payment tools', 'Square scheduling and checkout load only on pages where you request those services. Square\'s provider notices and controls also apply.', { checked: true, disabled: true })
+      + preferenceRow('privacy-analytics', 'Analytics', 'Helps us understand page and site interactions in aggregate through GA4. No form fields or customer contact details are sent.', { checked: false, disabled: false })
+      + preferenceRow('privacy-advertising', 'Advertising', 'Reserved for future advertising measurement. No advertising pixels are active in this release.', { checked: false, disabled: gpcEnabled })
+      + '</div><footer><div><a href="' + privacyUrl + '">Privacy Policy</a><a href="' + privacyUrl + '#notice-at-collection">Notice at Collection</a></div>'
+      + '<button data-privacy-action="save" type="button">Save choices</button></footer></section>';
+    document.body.appendChild(layer);
+    return layer;
+  }
+
+  function buildTrigger() {
     const button = document.createElement('button');
     button.type = 'button';
-    button.className = 'privacy-choice-button';
-    button.textContent = label;
-    button.dataset.privacyAction = action;
+    button.className = 'privacy-settings-trigger';
+    button.setAttribute('aria-label', 'Open privacy choices');
+    button.innerHTML = icon('privacy-cookie.svg', 'privacy-cookie-icon') + '<span>Privacy choices</span>';
+    button.addEventListener('click', function () {
+      lastPrivacyControl = button;
+      openPreferences();
+    });
+    document.body.appendChild(button);
     return button;
   }
 
-  let panel;
-  let trigger;
-
-  function hidePanel() {
-    if (!panel) return;
-    panel.hidden = true;
-    document.body.classList.remove('privacy-panel-open');
-    if (trigger) trigger.focus({ preventScroll: true });
+  function showBanner() {
+    banner.hidden = false;
+    trigger.hidden = true;
   }
 
-  function applyChoice(choice) {
-    if (choice === 'allow' && gpcEnabled) return;
-    const analyticsWasLoaded = Boolean(window.__tttAnalyticsLoaded);
-    saveChoice(choice);
+  function showTrigger() {
+    banner.hidden = true;
+    trigger.hidden = false;
+  }
 
-    if (choice === 'allow') {
-      loadAnalytics();
-      hidePanel();
-      return;
-    }
+  function renderDraft() {
+    analyticsInput.checked = Boolean(draft.analytics);
+    advertisingInput.checked = Boolean(draft.advertising) && !gpcEnabled;
+    advertisingInput.disabled = gpcEnabled;
+  }
 
-    updateGoogleConsent(false);
-    window.__tttAnalyticsLoaded = false;
-    deleteAnalyticsCookies();
-    hidePanel();
+  function openPreferences() {
+    const stored = readPreferences();
+    draft = stored
+      ? { analytics: stored.analytics, advertising: stored.advertising && !gpcEnabled }
+      : { analytics: false, advertising: false };
+    renderDraft();
+    backdrop.hidden = false;
+    document.body.classList.add('privacy-modal-open');
+    closeButton.focus({ preventScroll: true });
+  }
+
+  function closePreferences() {
+    backdrop.hidden = true;
+    document.body.classList.remove('privacy-modal-open');
+    if (lastPrivacyControl) lastPrivacyControl.focus({ preventScroll: true });
+  }
+
+  function save(requested) {
+    const analyticsWasLoaded = analyticsLoaded || Boolean(document.querySelector('script[data-optional-analytics="true"]'));
+    const effective = applyPreferences(requested);
+    writePreferences(effective);
+    draft = effective;
+    closePreferences();
+    showTrigger();
 
     // Reload after revocation so an already-loaded Google tag is removed from memory.
-    if (analyticsWasLoaded) window.location.reload();
+    if (analyticsWasLoaded && !effective.analytics) window.location.reload();
   }
 
-  function showPanel() {
-    if (!panel) panel = buildPrivacyPanel();
-    const message = panel.querySelector('[data-privacy-message]');
-    const actions = panel.querySelector('[data-privacy-actions]');
-    actions.replaceChildren();
-
-    if (gpcEnabled) {
-      message.textContent = 'Your browser is sending Global Privacy Control. We are honoring it, so Google Analytics is off and cannot be enabled while that signal is active.';
-      actions.appendChild(privacyButton('Keep analytics off', 'reject'));
-    } else {
-      const stored = readChoice();
-      message.textContent = stored === 'allow'
-        ? 'Analytics is currently allowed. You can turn it off just as easily without changing access to the site.'
-        : stored === 'reject'
-          ? 'Analytics is currently off. You can leave it off or allow aggregate measurement.'
-          : 'Google Analytics stays completely off unless you allow it. Rejecting optional analytics will not change your access to this site.';
-      actions.appendChild(privacyButton('Reject optional', 'reject'));
-      actions.appendChild(privacyButton('Allow analytics', 'allow'));
+  function handleAction(action, control) {
+    if (action === 'accept') {
+      save({ analytics: true, advertising: !gpcEnabled });
+    } else if (action === 'reject') {
+      save(deniedPreferences);
+    } else if (action === 'manage') {
+      lastPrivacyControl = control;
+      openPreferences();
+    } else if (action === 'close') {
+      closePreferences();
+    } else if (action === 'save') {
+      save({ analytics: analyticsInput.checked, advertising: advertisingInput.checked });
     }
-
-    const closeButton = privacyButton('Close', 'close');
-    closeButton.classList.add('privacy-close-button');
-    actions.appendChild(closeButton);
-
-    panel.hidden = false;
-    document.body.classList.add('privacy-panel-open');
-    panel.focus({ preventScroll: true });
   }
 
   function initPrivacyUi() {
-    trigger = document.createElement('button');
-    trigger.type = 'button';
-    trigger.className = 'privacy-settings-trigger';
-    trigger.textContent = gpcEnabled ? 'GPC honored · Privacy choices' : 'Do Not Sell or Share / Privacy Choices';
-    trigger.setAttribute('aria-haspopup', 'dialog');
-    trigger.addEventListener('click', showPanel);
-    document.body.appendChild(trigger);
+    banner = buildBanner();
+    backdrop = buildPreferencesDialog();
+    trigger = buildTrigger();
+    closeButton = backdrop.querySelector('.privacy-dialog-close');
+    analyticsInput = backdrop.querySelector('#privacy-analytics');
+    advertisingInput = backdrop.querySelector('#privacy-advertising');
+
+    analyticsInput.addEventListener('change', function () {
+      draft.analytics = analyticsInput.checked;
+    });
+    advertisingInput.addEventListener('change', function () {
+      draft.advertising = advertisingInput.checked && !gpcEnabled;
+    });
 
     document.querySelectorAll('[data-privacy-open]').forEach(function (button) {
-      button.addEventListener('click', showPanel);
+      button.addEventListener('click', function () {
+        lastPrivacyControl = button;
+        openPreferences();
+      });
     });
 
     document.body.addEventListener('click', function (event) {
-      const button = event.target.closest('[data-privacy-action]');
-      if (!button) return;
-      const action = button.dataset.privacyAction;
-      if (action === 'close') hidePanel();
-      if (action === 'allow' || action === 'reject') applyChoice(action);
+      const control = event.target.closest('[data-privacy-action]');
+      if (!control) return;
+      handleAction(control.dataset.privacyAction, control);
     });
 
     document.addEventListener('keydown', function (event) {
-      if (event.key === 'Escape' && panel && !panel.hidden) hidePanel();
+      if (event.key === 'Escape' && backdrop && !backdrop.hidden) closePreferences();
     });
 
-    if (!readChoice()) showPanel();
-  }
-
-  if (effectiveChoice() === 'allow') {
-    loadAnalytics();
-  } else {
-    updateGoogleConsent(false);
-    deleteAnalyticsCookies();
+    const stored = readPreferences();
+    if (stored) {
+      const effective = applyPreferences(stored);
+      if (gpcEnabled && stored.advertising) writePreferences(effective);
+      showTrigger();
+    } else {
+      applyPreferences(deniedPreferences);
+      showBanner();
+    }
   }
 
   if (document.readyState === 'loading') {
