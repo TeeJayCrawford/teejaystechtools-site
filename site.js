@@ -93,8 +93,8 @@
       const status = dealerListerCheckout.querySelector('[data-checkout-status]');
       const button = dealerListerCheckout.querySelector('button[type="submit"]');
       const values = Object.fromEntries(new FormData(dealerListerCheckout).entries());
-      if (!values.terms) {
-        if (status) status.textContent = 'Accept the DealerLister terms to continue.';
+      if (!values.email || !values.terms) {
+        if (status) status.textContent = 'Enter your email and accept the DealerLister terms.';
         return;
       }
       button.disabled = true;
@@ -104,19 +104,21 @@
       }
       try {
         const hostedLink = dealerListerCheckout.getAttribute('data-square-payment-link');
-        if (hostedLink) {
-          window.location.assign(hostedLink);
-          return;
-        }
         const response = await fetch('https://api.teejaystechtools.com/api/checkout/session', {
           method: 'POST',
           headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({ email: values.email || '' })
+          body: JSON.stringify({ email: values.email })
         });
         const payload = await response.json();
         if (!response.ok || !payload.checkoutUrl) throw new Error(payload.reason || 'Checkout is temporarily unavailable.');
         window.location.assign(payload.checkoutUrl);
       } catch (error) {
+        const hostedLink = dealerListerCheckout.getAttribute('data-square-payment-link');
+        if (hostedLink) {
+          if (status) status.textContent = 'Opening the Square checkout fallback…';
+          window.location.assign(hostedLink);
+          return;
+        }
         button.disabled = false;
         if (status) status.textContent = error.message + ' Call 573-854-1909 for help.';
       }
