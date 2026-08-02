@@ -1,0 +1,58 @@
+{
+  "version": 1,
+  "human_gate": "TeeJay Crawford",
+  "public_actions_require_approval": true,
+  "core_pages": [
+    "index.html",
+    "dealerships.html",
+    "services.html",
+    "proof.html",
+    "about.html",
+    "contact.html",
+    "small-business.html",
+    "autolister.html",
+    "privacy.html"
+  ],
+  "agents": [
+    {
+      "id": "scout",
+      "name": "Scout",
+      "function": "Market and Offer",
+      "mode": "read-only",
+      "output": "Evidence-backed problem brief and smallest sellable experiment",
+      "prohibited": ["contact prospects", "buy data", "publish claims"]
+    },
+    {
+      "id": "proof",
+      "name": "Proof",
+      "function": "Evidence and SEO",
+      "mode": "prepare-only",
+      "output": "Source-labeled case-study and high-intent content drafts",
+      "prohibited": ["identify private clients", "invent metrics", "publish"]
+    },
+    {
+      "id": "forge",
+      "name": "Forge",
+      "function": "GitHub Site and Release",
+      "mode": "prepare-only",
+      "output": "Tested branch, visual QA, release packet, and public verification report",
+      "prohibited": ["merge without approval", "change DNS without approval", "claim live before verification"]
+    },
+    {
+      "id": "concierge",
+      "name": "Concierge",
+      "function": "Lead and Sales",
+      "mode": "prepare-only",
+      "output": "Qualified lead brief and exact response draft",
+      "prohibited": ["send email", "write CRM", "schedule meetings", "quote unapproved terms"]
+    },
+    {
+      "id": "ledger",
+      "name": "Ledger",
+      "function": "Revenue Analyst",
+      "mode": "read-only",
+      "output": "Freshness-labeled pipeline, collected revenue, contribution profit, and impact report",
+      "prohibited": ["infer sales from analytics", "expose PII", "edit source records"]
+    }
+  ]
+}
