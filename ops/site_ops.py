@@ -145,7 +145,7 @@ def audit(root: Path) -> list[str]:
 
 def status() -> None:
     config = load_config()
-    print(f"Human gate: {config['human_gate']}")
+    print(f"Executive owner: {config['executive_owner']}")
     for agent in config["agents"]:
         print(f"{agent['name']:<10} {agent['mode']:<12} {agent['function']}")
 
@@ -159,7 +159,7 @@ def qualify(args: argparse.Namespace) -> None:
         "recommended_next_step": "20-minute fit check",
         "status": "draft_only",
         "external_action_taken": False,
-        "human_approval_required_before_response": True,
+        "executive_authorization_required_before_response": True,
     }
     print(json.dumps(brief, indent=2))
 

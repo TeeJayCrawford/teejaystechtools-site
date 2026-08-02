@@ -42,9 +42,9 @@
     });
   });
 
-  const leadForm = document.querySelector('[data-lead-form]');
-  if (leadForm) {
-    const service = leadForm.querySelector('[name="service"]');
+  const intakeForm = document.querySelector('[data-intake-form]');
+  if (intakeForm) {
+    const service = intakeForm.querySelector('[name="serviceCode"]');
     const params = new URLSearchParams(window.location.search);
     const requestedService = params.get('service');
     if (service && requestedService) {
@@ -54,35 +54,62 @@
       if (matchingOption) service.value = requestedService;
     }
 
-    leadForm.addEventListener('submit', function (event) {
+    intakeForm.addEventListener('submit', async function (event) {
       event.preventDefault();
-      const values = Object.fromEntries(new FormData(leadForm).entries());
-      const subject = 'Fit check: ' + (values.business || values.name || 'new inquiry') + ' — ' + values.service;
-      const body = [
-        'Name: ' + values.name,
-        'Business: ' + (values.business || 'Not provided'),
-        'Role: ' + (values.role || 'Not provided'),
-        'Email: ' + values.email,
-        'Phone: ' + (values.phone || 'Not provided'),
-        'Website: ' + (values.website || 'Not provided'),
-        'Rooftops / locations: ' + (values.locations || 'Not provided'),
-        'Requested starting point: ' + values.service,
-        'Timeline: ' + values.timeline,
-        '',
-        'Problem to solve:',
-        values.problem
-      ].join('\n');
-
-      if (typeof window.gtag === 'function') {
-        window.gtag('event', 'generate_lead', {
-          method: 'mailto_brief',
-          service: values.service
+      const values = Object.fromEntries(new FormData(intakeForm).entries());
+      const status = intakeForm.querySelector('[data-form-status]');
+      const button = intakeForm.querySelector('button[type="submit"]');
+      button.disabled = true;
+      if (status) status.textContent = 'Sending your private brief…';
+      try {
+        const response = await fetch('https://api.teejaystechtools.com/api/intake', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify(values)
         });
+        const payload = await response.json();
+        if (!response.ok || !payload.ok) throw new Error(payload.reason || 'The brief could not be sent.');
+        intakeForm.reset();
+        if (status) status.textContent = 'Received. TeeJay’s Tech Tools will review the brief and follow up directly.';
+        if (typeof window.gtag === 'function') {
+          window.gtag('event', 'generate_lead', { method: 'private_intake', service: values.serviceCode });
+        }
+      } catch (error) {
+        button.disabled = false;
+        if (status) status.textContent = error.message + ' You can also call 573-854-1909.';
       }
+    });
+  }
 
-      const status = leadForm.querySelector('[data-form-status]');
-      if (status) status.textContent = 'Opening your email app with the brief filled in…';
-      window.location.href = 'mailto:teejaycrawford@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+  const serviceCheckout = document.querySelector('[data-service-checkout]');
+  if (serviceCheckout) {
+    serviceCheckout.addEventListener('submit', async function (event) {
+      event.preventDefault();
+      const status = serviceCheckout.querySelector('[data-service-checkout-status]');
+      const button = serviceCheckout.querySelector('button[type="submit"]');
+      const values = Object.fromEntries(new FormData(serviceCheckout).entries());
+      if (!values.email || !values.terms) {
+        if (status) status.textContent = 'Enter your email and accept the working-session terms.';
+        return;
+      }
+      button.disabled = true;
+      if (status) status.textContent = 'Opening secure Square checkout…';
+      try {
+        const response = await fetch('https://api.teejaystechtools.com/api/service-checkout', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ email: values.email, serviceCode: values.serviceCode })
+        });
+        const payload = await response.json();
+        if (!response.ok || !payload.checkoutUrl) throw new Error(payload.reason || 'Checkout is temporarily unavailable.');
+        if (typeof window.gtag === 'function') {
+          window.gtag('event', 'begin_checkout', { currency: 'USD', value: 497, items: [{ item_id: values.serviceCode, item_name: 'Profit & Systems Working Session', price: 497, quantity: 1 }] });
+        }
+        window.location.assign(payload.checkoutUrl);
+      } catch (error) {
+        button.disabled = false;
+        if (status) status.textContent = error.message + ' Call 573-854-1909 for help.';
+      }
     });
   }
 

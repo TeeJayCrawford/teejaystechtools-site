@@ -1,11 +1,14 @@
 {
   "version": 1,
-  "human_gate": "TeeJay Crawford",
-  "public_actions_require_approval": true,
+  "executive_owner": "TeeJay Crawford, Founder & CEO",
+  "public_actions_require_executive_authorization": true,
   "core_pages": [
     "index.html",
     "dealerships.html",
     "services.html",
+    "book.html",
+    "profit-session.html",
+    "service-terms.html",
     "proof.html",
     "about.html",
     "contact.html",
@@ -37,7 +40,7 @@
       "function": "GitHub Site and Release",
       "mode": "prepare-only",
       "output": "Tested branch, visual QA, release packet, and public verification report",
-      "prohibited": ["merge without approval", "change DNS without approval", "claim live before verification"]
+      "prohibited": ["merge without executive authorization", "change DNS without executive authorization", "claim live before verification"]
     },
     {
       "id": "concierge",

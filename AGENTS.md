@@ -1,6 +1,6 @@
 # TeeJay's Tech Tools revenue pod
 
-This repository is operated by five narrow agents under one human approval gate. The source of truth is `ops/agents.json`.
+This repository is operated by five narrow agents under one executive owner: TeeJay Crawford, Founder & CEO. The source of truth is `ops/agents.json`.
 
 ## Shared operating modes
 
@@ -10,7 +10,7 @@ This repository is operated by five narrow agents under one human approval gate.
 
 ## Non-negotiable boundaries
 
-- Never send email, contact a lead, post publicly, write to a CRM, charge a payment method, change DNS, or deploy production without exact human approval.
+- Never send email, contact a lead, post publicly, write to a CRM, charge a payment method, change DNS, or deploy production without exact executive authorization.
 - Never call a dashboard interaction a sale. Economic claims require an authorized source and a recorded coverage boundary.
 - Keep `prototype`, `local`, `staged`, `deployed`, and `public/live` distinct.
 - Never put client private data, credentials, customer records, or secrets in this repository, analytics, fixtures, screenshots, or reports.

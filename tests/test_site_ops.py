@@ -23,10 +23,10 @@ class SiteOpsTests(unittest.TestCase):
         self.assertEqual(parser.h1_count, 1)
         self.assertEqual(parser.links, ["next.html"])
 
-    def test_agent_config_has_one_human_gate_and_five_agents(self):
+    def test_agent_config_has_one_executive_owner_and_five_agents(self):
         config = json.loads(site_ops.CONFIG_PATH.read_text(encoding="utf-8"))
-        self.assertEqual(config["human_gate"], "TeeJay Crawford")
-        self.assertTrue(config["public_actions_require_approval"])
+        self.assertEqual(config["executive_owner"], "TeeJay Crawford, Founder & CEO")
+        self.assertTrue(config["public_actions_require_executive_authorization"])
         self.assertEqual(len(config["agents"]), 5)
 
 
