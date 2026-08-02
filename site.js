@@ -152,7 +152,7 @@
         const payload = await response.json();
         if (!response.ok || !payload.ok) throw new Error(payload.reason || 'The brief could not be sent.');
         intakeForm.reset();
-        if (status) status.textContent = 'Received. TeeJay’s Tech Tools will review the brief and follow up directly.';
+        if (status) status.textContent = payload.message || 'Received. TeeJay’s Tech Tools will review the brief and follow up directly.';
         track('generate_lead', { method: 'private_intake', service: values.serviceCode });
       } catch (error) {
         button.disabled = false;
