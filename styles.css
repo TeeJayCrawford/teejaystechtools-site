@@ -1346,6 +1346,157 @@ h3 {
   transform: none;
 }
 
+.privacy-settings-trigger {
+  position: fixed;
+  right: 18px;
+  bottom: 16px;
+  z-index: 98;
+  max-width: calc(100vw - 36px);
+  padding: 9px 12px;
+  border: 1px solid rgba(95, 177, 255, 0.52);
+  border-radius: 999px;
+  background: rgba(7, 17, 31, 0.96);
+  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.34);
+  color: #d9e9fa;
+  font: inherit;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  line-height: 1.25;
+  cursor: pointer;
+}
+
+.privacy-settings-trigger:hover,
+.privacy-settings-trigger:focus-visible {
+  border-color: var(--blue-bright);
+  color: var(--white);
+  outline: none;
+}
+
+.privacy-panel {
+  position: fixed;
+  right: 24px;
+  bottom: 66px;
+  left: 24px;
+  z-index: 100;
+  display: grid;
+  width: min(920px, calc(100vw - 48px));
+  margin: 0 auto;
+  padding: clamp(24px, 3.8vw, 38px);
+  border: 1px solid rgba(95, 177, 255, 0.48);
+  background: rgba(7, 17, 31, 0.985);
+  box-shadow: 0 24px 90px rgba(0, 0, 0, 0.58);
+  grid-template-columns: minmax(0, 1fr) minmax(240px, 0.45fr);
+  gap: clamp(22px, 4vw, 54px);
+  color: var(--white);
+}
+
+.privacy-panel[hidden] {
+  display: none;
+}
+
+.privacy-panel:focus-visible {
+  outline: 2px solid var(--blue-bright);
+  outline-offset: 3px;
+}
+
+.privacy-kicker {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--blue-bright);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.privacy-panel h2 {
+  margin: 0;
+  font-size: clamp(1.45rem, 3vw, 2.15rem);
+  letter-spacing: -0.035em;
+}
+
+.privacy-panel p {
+  max-width: 64ch;
+  margin: 12px 0 0;
+  color: #c7d4e6;
+  font-size: 0.9rem;
+  line-height: 1.58;
+}
+
+.privacy-panel .privacy-detail {
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
+.privacy-policy-link {
+  display: inline-block;
+  margin-top: 14px;
+  color: var(--blue-bright);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.privacy-panel-actions {
+  display: grid;
+  align-content: center;
+  gap: 10px;
+}
+
+.privacy-choice-button {
+  min-height: 46px;
+  width: 100%;
+  padding: 11px 16px;
+  border: 1px solid var(--blue-bright);
+  background: transparent;
+  color: var(--white);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.privacy-choice-button:hover,
+.privacy-choice-button:focus-visible {
+  background: var(--blue);
+  outline: none;
+}
+
+.privacy-close-button {
+  min-height: 38px;
+  border-color: var(--rule);
+  color: var(--muted);
+  font-weight: 650;
+}
+
+.privacy-panel-open .privacy-settings-trigger {
+  visibility: hidden;
+}
+
+.policy-list {
+  display: grid;
+  gap: 12px;
+  margin: 20px 0 32px;
+  padding: 0;
+  list-style: none;
+}
+
+.policy-list li {
+  padding: 18px 20px;
+  border: 1px solid var(--rule);
+  background: rgba(10, 24, 48, 0.42);
+}
+
+.policy-list strong {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--white);
+}
+
+.policy-action {
+  margin: 24px 0 36px;
+}
+
 .booking-hero .page-hero-inner {
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(260px, 0.55fr);
@@ -2134,6 +2285,24 @@ h3 {
   .form-note,
   .form-status {
     grid-column: auto;
+  }
+
+  .privacy-panel {
+    right: 12px;
+    bottom: 58px;
+    left: 12px;
+    width: calc(100vw - 24px);
+    max-height: calc(100vh - 76px);
+    overflow-y: auto;
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .privacy-settings-trigger {
+    right: 12px;
+    bottom: 10px;
+    max-width: calc(100vw - 24px);
+    font-size: 0.64rem;
   }
 
   .topbar {

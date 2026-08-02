@@ -29,6 +29,24 @@ class SiteOpsTests(unittest.TestCase):
         self.assertTrue(config["public_actions_require_executive_authorization"])
         self.assertEqual(len(config["agents"]), 5)
 
+    def test_every_html_page_uses_consent_runtime_without_hardcoded_google_tag(self):
+        root = Path(__file__).resolve().parents[1]
+        html_pages = list(root.rglob("*.html"))
+        self.assertGreater(len(html_pages), 0)
+        for page in html_pages:
+            source = page.read_text(encoding="utf-8")
+            self.assertIn("privacy.js", source, page)
+            self.assertNotIn("googletagmanager.com/gtag/js", source, page)
+            self.assertNotIn("gtag('config'", source, page)
+
+    def test_privacy_runtime_defaults_to_denied_and_honors_gpc(self):
+        root = Path(__file__).resolve().parents[1]
+        source = (root / "privacy.js").read_text(encoding="utf-8")
+        self.assertIn("navigator.globalPrivacyControl === true", source)
+        self.assertIn("analytics_storage: 'denied'", source)
+        self.assertIn("ad_storage: 'denied'", source)
+        self.assertIn("effectiveChoice() !== 'allow'", source)
+
 
 if __name__ == "__main__":
     unittest.main()

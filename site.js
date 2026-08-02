@@ -1,4 +1,10 @@
 (function () {
+  const track = function (eventName, parameters) {
+    if (window.TTTAnalytics && typeof window.TTTAnalytics.track === 'function') {
+      window.TTTAnalytics.track(eventName, parameters);
+    }
+  };
+
   const header = document.querySelector('[data-site-header]');
   const menuButton = document.querySelector('.menu-button');
   const nav = document.querySelector('.primary-nav');
@@ -33,12 +39,10 @@
 
   document.querySelectorAll('[data-track]').forEach(function (node) {
     node.addEventListener('click', function () {
-      if (typeof window.gtag === 'function') {
-        window.gtag('event', 'select_content', {
-          content_type: 'site_cta',
-          item_id: node.getAttribute('data-track')
-        });
-      }
+      track('select_content', {
+        content_type: 'site_cta',
+        item_id: node.getAttribute('data-track')
+      });
     });
   });
 
@@ -71,9 +75,7 @@
         if (!response.ok || !payload.ok) throw new Error(payload.reason || 'The brief could not be sent.');
         intakeForm.reset();
         if (status) status.textContent = 'Received. TeeJay’s Tech Tools will review the brief and follow up directly.';
-        if (typeof window.gtag === 'function') {
-          window.gtag('event', 'generate_lead', { method: 'private_intake', service: values.serviceCode });
-        }
+        track('generate_lead', { method: 'private_intake', service: values.serviceCode });
       } catch (error) {
         button.disabled = false;
         if (status) status.textContent = error.message + ' You can also call 573-854-1909.';
@@ -102,9 +104,7 @@
         });
         const payload = await response.json();
         if (!response.ok || !payload.checkoutUrl) throw new Error(payload.reason || 'Checkout is temporarily unavailable.');
-        if (typeof window.gtag === 'function') {
-          window.gtag('event', 'begin_checkout', { currency: 'USD', value: 497, items: [{ item_id: values.serviceCode, item_name: 'Profit & Systems Working Session', price: 497, quantity: 1 }] });
-        }
+        track('begin_checkout', { currency: 'USD', value: 497, items: [{ item_id: values.serviceCode, item_name: 'Profit & Systems Working Session', price: 497, quantity: 1 }] });
         window.location.assign(payload.checkoutUrl);
       } catch (error) {
         button.disabled = false;
@@ -126,9 +126,7 @@
       }
       button.disabled = true;
       if (status) status.textContent = 'Opening secure Square checkout…';
-      if (typeof window.gtag === 'function') {
-        window.gtag('event', 'begin_checkout', { currency: 'USD', value: 49.95, items: [{ item_id: 'dealerlister-lite', item_name: 'DealerLister Lite', price: 49.95, quantity: 1 }] });
-      }
+      track('begin_checkout', { currency: 'USD', value: 49.95, items: [{ item_id: 'dealerlister-lite', item_name: 'DealerLister Lite', price: 49.95, quantity: 1 }] });
       try {
         const hostedLink = dealerListerCheckout.getAttribute('data-square-payment-link');
         const response = await fetch('https://api.teejaystechtools.com/api/checkout/session', {
