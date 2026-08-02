@@ -1,4 +1,6 @@
 User-agent: *
 Allow: /
+Disallow: /concept/
+Disallow: /newsletter/issues/template.html
 
 Sitemap: https://teejaystechtools.com/sitemap.xml
