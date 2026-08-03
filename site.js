@@ -127,20 +127,46 @@
   const intakeForm = document.querySelector('[data-intake-form]');
   if (intakeForm) {
     const service = intakeForm.querySelector('[name="serviceCode"]');
+    const sourcePage = intakeForm.querySelector('[name="sourcePage"]');
+    const submitButton = intakeForm.querySelector('button[type="submit"]');
     const params = new URLSearchParams(window.location.search);
     const requestedService = params.get('service');
-    if (service && requestedService) {
+    if (service && service.tagName === 'SELECT' && requestedService) {
       const matchingOption = Array.from(service.options).find(function (option) {
         return option.value === requestedService;
       });
       if (matchingOption) service.value = requestedService;
     }
 
+    if (sourcePage) {
+      const attribution = new URLSearchParams();
+      ['utm_source', 'utm_medium', 'utm_campaign'].forEach(function (key) {
+        const value = params.get(key);
+        if (value) attribution.set(key, value.slice(0, 120));
+      });
+      if (attribution.size > 0) {
+        sourcePage.value = sourcePage.value.split('?')[0] + '?' + attribution.toString();
+      }
+    }
+
+    function updateIntakeAction() {
+      if (!submitButton || !service || service.tagName !== 'SELECT') return;
+      const freeAudit = service.value === 'free-ai-search-audit';
+      submitButton.innerHTML = freeAudit
+        ? 'Request my free audit <span aria-hidden="true">→</span>'
+        : 'Send price request <span aria-hidden="true">→</span>';
+    }
+
+    if (service && service.tagName === 'SELECT') {
+      updateIntakeAction();
+      service.addEventListener('change', updateIntakeAction);
+    }
+
     intakeForm.addEventListener('submit', async function (event) {
       event.preventDefault();
       const values = Object.fromEntries(new FormData(intakeForm).entries());
       const status = intakeForm.querySelector('[data-form-status]');
-      const button = intakeForm.querySelector('button[type="submit"]');
+      const button = submitButton;
       button.disabled = true;
       if (status) status.textContent = 'Sending your private brief…';
       try {
