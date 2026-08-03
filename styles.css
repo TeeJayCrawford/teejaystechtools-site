@@ -1251,6 +1251,68 @@ h3 {
   gap: 14px;
 }
 
+.audit-hero .page-hero-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(300px, 0.7fr);
+  gap: clamp(2.25rem, 6vw, 6.5rem);
+  align-items: center;
+}
+
+.audit-hero h1 {
+  font-size: clamp(3.45rem, 6vw, 6.7rem);
+}
+
+.audit-summary {
+  padding: clamp(1.6rem, 4vw, 2.6rem);
+  border: 1px solid rgba(101, 179, 255, 0.32);
+  background: rgba(8, 26, 49, 0.84);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.2);
+}
+
+.audit-summary > strong {
+  display: block;
+  margin-bottom: 1.25rem;
+  color: var(--white);
+  font-size: 1.15rem;
+}
+
+.audit-summary ol {
+  display: grid;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.audit-summary li {
+  display: grid;
+  grid-template-columns: 2.2rem 1fr;
+  gap: 0.8rem;
+  align-items: start;
+  color: #d7e4f4;
+}
+
+.audit-summary li span {
+  color: var(--cyan);
+  font: 700 0.74rem/1.5 var(--mono);
+}
+
+.audit-boundaries {
+  margin: 1.5rem 0;
+  padding: 1.35rem;
+  border-left: 3px solid var(--amber);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.audit-boundaries ul {
+  margin: 0.8rem 0 0;
+  padding-left: 1.15rem;
+}
+
+.audit-boundaries li + li {
+  margin-top: 0.45rem;
+}
+
 .page-section {
   padding: clamp(72px, 8vw, 120px) 0;
   border-bottom: 1px solid var(--rule);
@@ -3074,6 +3136,10 @@ h3 {
 }
 
 @media (max-width: 980px) {
+  .audit-hero .page-hero-inner {
+    grid-template-columns: 1fr;
+  }
+
   .nav-shell {
     min-height: 82px;
     grid-template-columns: 1fr auto auto;

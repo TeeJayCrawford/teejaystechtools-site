@@ -64,6 +64,32 @@ class SiteOpsTests(unittest.TestCase):
         ):
             self.assertTrue((root / "assets" / asset).exists(), asset)
 
+    def test_every_mobile_menu_uses_the_shared_visible_label(self):
+        root = Path(__file__).resolve().parents[1]
+        menu_pages = []
+        for page in root.rglob("*.html"):
+            source = page.read_text(encoding="utf-8")
+            if 'class="menu-button"' not in source:
+                continue
+            menu_pages.append(page)
+            self.assertIn('class="menu-label" data-menu-label>Menu</span>', source, page)
+            self.assertIn('aria-label="Open navigation menu"', source, page)
+        self.assertGreater(len(menu_pages), 0)
+
+        runtime = (root / "site.js").read_text(encoding="utf-8")
+        self.assertIn("updateMenuLabel(open ? 'Close' : 'Menu');", runtime)
+
+    def test_free_audit_route_uses_the_guarded_intake(self):
+        root = Path(__file__).resolve().parents[1]
+        audit = (root / "free-ai-audit.html").read_text(encoding="utf-8")
+        home = (root / "index.html").read_text(encoding="utf-8")
+
+        self.assertIn('data-intake-form', audit)
+        self.assertIn('name="serviceCode" value="free-website-ai-audit"', audit)
+        self.assertIn('name="sourcePage" value="free-ai-audit.html"', audit)
+        self.assertIn('name="website"', audit)
+        self.assertIn('href="free-ai-audit.html"', home)
+
 
 if __name__ == "__main__":
     unittest.main()
