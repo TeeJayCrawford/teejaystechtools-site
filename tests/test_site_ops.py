@@ -64,6 +64,19 @@ class SiteOpsTests(unittest.TestCase):
         ):
             self.assertTrue((root / "assets" / asset).exists(), asset)
 
+    def test_homepage_leads_with_free_ai_audit_and_preserves_agent_network(self):
+        root = Path(__file__).resolve().parents[1]
+        source = (root / "index.html").read_text(encoding="utf-8")
+        hero = source.split('<section class="hero-section">', 1)[1].split("</section>", 1)[0]
+
+        self.assertIn("Will AI recommend your business—or your competitor?", hero)
+        self.assertIn('href="free-ai-search-audit.html"', hero)
+        self.assertIn('href="free-ai-search-audit.html#deliverables"', hero)
+        self.assertIn('class="agent-network-hero"', hero)
+        self.assertIn("read-only", hero)
+        self.assertIn("prepare-only", hero)
+        self.assertNotIn('class="ai-audit-promo"', source)
+
 
 if __name__ == "__main__":
     unittest.main()
