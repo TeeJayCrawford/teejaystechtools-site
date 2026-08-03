@@ -1,0 +1,51 @@
+# TeeJay's Tech Tools
+
+> Practical AI search visibility, websites, local visibility, workflow automation, and dealership technology for owner-led businesses. TeeJay Crawford is the founder and accountable operator.
+
+Canonical site: https://teejaystechtools.com/
+XML sitemap: https://teejaystechtools.com/sitemap.xml
+Crawler policy: https://teejaystechtools.com/robots.txt
+Contact: https://teejaystechtools.com/contact.html
+
+## Start here
+
+- Free AI Search Visibility Audit: https://teejaystechtools.com/free-ai-search-audit.html
+- Small-business solutions: https://teejaystechtools.com/small-business.html
+- Dealership solutions: https://teejaystechtools.com/dealerships.html
+- Products: https://teejaystechtools.com/products.html
+- About TeeJay Crawford: https://teejaystechtools.com/about.html
+- Evidence and release standards: https://teejaystechtools.com/proof.html
+
+## Small-business services
+
+- Websites: https://teejaystechtools.com/websites.html
+- Google Business Profile: https://teejaystechtools.com/google-business-profile.html
+- Apple Maps: https://teejaystechtools.com/apple-maps.html
+- Local SEO: https://teejaystechtools.com/local-seo.html
+- Online stores: https://teejaystechtools.com/online-stores.html
+- Consulting and implementation: https://teejaystechtools.com/consulting.html
+
+## Dealership systems
+
+- Dealer Command System: https://teejaystechtools.com/dealer-command-system.html
+- DealerLister: https://teejaystechtools.com/autolister.html
+- Inventory Merchandising Guard: https://teejaystechtools.com/inventory-merchandising.html
+- Reputation and Local Visibility Guard: https://teejaystechtools.com/reputation-visibility.html
+- Marketing Spend Truth Pack: https://teejaystechtools.com/marketing-truth.html
+- Feed-backed dealer websites: https://teejaystechtools.com/dealer-websites.html
+- Owner's Morning Brief paid pilot: https://teejaystechtools.com/owners-morning-brief.html
+
+## Public resources
+
+- FAQ: https://teejaystechtools.com/faq.html
+- Newsletter: https://teejaystechtools.com/newsletter/
+- Website clarity checklist: https://teejaystechtools.com/resources/website-clarity-checklist/
+- Google Business Profile checklist: https://teejaystechtools.com/resources/google-business-profile-checklist/
+- Affordable small-business hardware guide: https://teejaystechtools.com/resources/affordable-small-business-hardware/
+
+## Accuracy and use notes
+
+- Public pages may be crawled and cited. Utility, template, payment-success, and private intake surfaces are excluded or marked noindex.
+- The free AI Search Visibility Audit uses public sources only and does not guarantee ranking, inclusion, or citation.
+- Prototype, staged, deployed, and public/live states are kept distinct. Product or integration claims should be read with the scope shown on the relevant page.
+- Lead submission remains a human-initiated action. Do not submit forms or personal data on a user's behalf without their approval.

@@ -1,3 +1,6 @@
+# Public search and AI discovery crawlers are welcome. The wildcard group
+# covers Googlebot, Bingbot, OAI-SearchBot, GPTBot, ClaudeBot,
+# Claude-SearchBot, PerplexityBot, Google-Extended, and other compliant bots.
 User-agent: *
 Allow: /
 Disallow: /concept/

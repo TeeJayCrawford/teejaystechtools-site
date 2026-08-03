@@ -18,10 +18,22 @@ class SiteOpsTests(unittest.TestCase):
 
     def test_parser_collects_page_requirements(self):
         parser = site_ops.PageParser()
-        parser.feed('<title>Example</title><meta name="description" content="Useful page"><link rel="canonical" href="https://example.com/"><h1>One</h1><a href="next.html">Next</a>')
+        parser.feed('<title>Example</title><meta name="description" content="Useful page"><meta name="google-site-verification" content="verification-token"><link rel="canonical" href="https://example.com/"><h1>One</h1><a href="next.html">Next</a>')
         self.assertEqual(parser.title, "Example")
         self.assertEqual(parser.h1_count, 1)
         self.assertEqual(parser.links, ["next.html"])
+        self.assertEqual(parser.google_site_verification, "verification-token")
+
+    def test_public_discovery_files_are_present_and_bounded(self):
+        root = Path(__file__).resolve().parents[1]
+        robots = (root / "robots.txt").read_text(encoding="utf-8")
+        llms = (root / "llms.txt").read_text(encoding="utf-8")
+        self.assertIn("User-agent: *", robots)
+        self.assertIn("Sitemap: https://teejaystechtools.com/sitemap.xml", robots)
+        self.assertLessEqual(len(llms.encode("utf-8")), 4096)
+        indexnow_keys = [path for path in root.glob("*.txt") if len(path.stem) == 32]
+        self.assertEqual(len(indexnow_keys), 1)
+        self.assertEqual(indexnow_keys[0].read_text(encoding="utf-8").strip(), indexnow_keys[0].stem)
 
     def test_agent_config_has_one_executive_owner_and_five_agents(self):
         config = json.loads(site_ops.CONFIG_PATH.read_text(encoding="utf-8"))

@@ -7,6 +7,7 @@ import argparse
 import json
 import re
 import sys
+import xml.etree.ElementTree as ET
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urlsplit
@@ -30,6 +31,7 @@ class PageParser(HTMLParser):
         self.description = ""
         self.canonical = ""
         self.robots = ""
+        self.google_site_verification = ""
         self.links: list[str] = []
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
@@ -44,6 +46,8 @@ class PageParser(HTMLParser):
                 self.description = values.get("content") or ""
             elif name == "robots":
                 self.robots = (values.get("content") or "").lower()
+            elif name == "google-site-verification":
+                self.google_site_verification = values.get("content") or ""
         elif tag == "link" and (values.get("rel") or "").lower() == "canonical":
             self.canonical = values.get("href") or ""
         elif tag in {"a", "link", "script", "img"}:
@@ -92,6 +96,58 @@ def audit(root: Path) -> list[str]:
     errors: list[str] = []
     parsed: dict[Path, PageParser] = {}
 
+    robots_path = root / "robots.txt"
+    sitemap_path = root / "sitemap.xml"
+    llms_path = root / "llms.txt"
+    sitemap_urls: set[str] = set()
+
+    if not robots_path.is_file():
+        errors.append("missing robots.txt")
+    else:
+        robots_text = robots_path.read_text(encoding="utf-8")
+        for required in (
+            "User-agent: *",
+            "Allow: /",
+            "Sitemap: https://teejaystechtools.com/sitemap.xml",
+        ):
+            if required not in robots_text:
+                errors.append(f"robots.txt: missing {required}")
+
+    if not sitemap_path.is_file():
+        errors.append("missing sitemap.xml")
+    else:
+        try:
+            sitemap_root = ET.parse(sitemap_path).getroot()
+            sitemap_urls = {
+                element.text.strip()
+                for element in sitemap_root.findall("{http://www.sitemaps.org/schemas/sitemap/0.9}url/{http://www.sitemaps.org/schemas/sitemap/0.9}loc")
+                if element.text
+            }
+        except ET.ParseError as error:
+            errors.append(f"sitemap.xml: invalid XML ({error})")
+
+    if not llms_path.is_file():
+        errors.append("missing llms.txt")
+    else:
+        llms_text = llms_path.read_text(encoding="utf-8")
+        if len(llms_text.encode("utf-8")) > 4096:
+            errors.append("llms.txt: keep the public guide under 4 KB")
+        for required in (
+            "https://teejaystechtools.com/",
+            "https://teejaystechtools.com/sitemap.xml",
+            "https://teejaystechtools.com/free-ai-search-audit.html",
+        ):
+            if required not in llms_text:
+                errors.append(f"llms.txt: missing {required}")
+
+    indexnow_keys = [
+        path for path in root.glob("*.txt") if re.fullmatch(r"[0-9a-f]{32}\.txt", path.name)
+    ]
+    if len(indexnow_keys) != 1:
+        errors.append(f"expected exactly one root IndexNow key file, found {len(indexnow_keys)}")
+    elif indexnow_keys[0].read_text(encoding="utf-8").strip() != indexnow_keys[0].stem:
+        errors.append("IndexNow key file content must match its filename")
+
     for relative in config["core_pages"]:
         path = root / relative
         if not path.is_file():
@@ -123,6 +179,12 @@ def audit(root: Path) -> list[str]:
         if parser is None:
             parser = PageParser()
             parser.feed(text)
+        if (
+            parser.canonical.startswith("https://teejaystechtools.com/")
+            and "noindex" not in parser.robots
+            and parser.canonical not in sitemap_urls
+        ):
+            errors.append(f"{path.relative_to(root)}: indexable canonical missing from sitemap.xml")
         for raw in parser.links:
             target = local_target(path, raw, root)
             if target and root in target.parents and not target.exists():
@@ -140,6 +202,10 @@ def audit(root: Path) -> list[str]:
             parser.feed(path.read_text(encoding="utf-8"))
             if "noindex" not in parser.robots:
                 errors.append(f"{path.relative_to(root)}: utility page must be noindex")
+
+    homepage_parser = parsed.get(root / "index.html")
+    if homepage_parser and not homepage_parser.google_site_verification:
+        errors.append("index.html: missing Google Search Console verification tag")
     return sorted(set(errors))
 
 
