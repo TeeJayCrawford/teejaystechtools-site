@@ -31,6 +31,8 @@ class SiteOpsTests(unittest.TestCase):
         self.assertIn("User-agent: *", robots)
         self.assertIn("Sitemap: https://teejaystechtools.com/sitemap.xml", robots)
         self.assertLessEqual(len(llms.encode("utf-8")), 4096)
+        self.assertTrue(llms.startswith("# TeeJay's Tech Tools\n\n> "))
+        self.assertIn("- [Free AI Search Visibility Audit](https://teejaystechtools.com/free-ai-search-audit.html):", llms)
         indexnow_keys = [path for path in root.glob("*.txt") if len(path.stem) == 32]
         self.assertEqual(len(indexnow_keys), 1)
         self.assertEqual(indexnow_keys[0].read_text(encoding="utf-8").strip(), indexnow_keys[0].stem)

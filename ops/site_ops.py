@@ -132,6 +132,18 @@ def audit(root: Path) -> list[str]:
         llms_text = llms_path.read_text(encoding="utf-8")
         if len(llms_text.encode("utf-8")) > 4096:
             errors.append("llms.txt: keep the public guide under 4 KB")
+        llms_lines = llms_text.splitlines()
+        if not llms_lines or not llms_lines[0].startswith("# "):
+            errors.append("llms.txt: first line must be a site-name h1")
+        if not any(line.startswith("> ") for line in llms_lines[:5]):
+            errors.append("llms.txt: include a summary blockquote after the h1")
+        in_file_list = False
+        file_link_pattern = re.compile(r"^- \[[^\]]+\]\(https://[^)]+\)(?:: .+)?$")
+        for line in llms_lines:
+            if line.startswith("## "):
+                in_file_list = True
+            elif in_file_list and line.startswith("- ") and not file_link_pattern.fullmatch(line):
+                errors.append(f"llms.txt: file-list item must be a Markdown link ({line})")
         for required in (
             "https://teejaystechtools.com/",
             "https://teejaystechtools.com/sitemap.xml",
