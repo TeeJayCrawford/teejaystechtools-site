@@ -16,7 +16,7 @@
     <meta property="og:image" content="https://teejaystechtools.com/assets/og-dealer-profit-ops.png" />
     <meta property="og:image:alt" content="Dealer operating lanes feeding a human-approved action queue" />
     <meta name="twitter:card" content="summary_large_image" />
-    <link rel="stylesheet" href="styles.css?v=20260802-reference1" />
+    <link rel="stylesheet" href="styles.css?v=20260803-atom1" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -77,29 +77,102 @@
             </div>
           </div>
 
-          <div class="profit-console" aria-label="Dealership systems feeding a prioritized action queue">
-            <div class="console-sources">
-              <div class="console-source"><span class="source-code">DS</span><span>DMS + accounting</span></div>
-              <div class="console-source"><span class="source-code">CR</span><span>CRM + follow-up</span></div>
-              <div class="console-source"><span class="source-code">IM</span><span>Inventory + market</span></div>
-              <div class="console-source"><span class="source-code">MK</span><span>Marketing + vendors</span></div>
+          <div
+            class="agent-network-hero"
+            role="img"
+            aria-label="Five specialized agents connected to a central Tech Tools operator-controlled nucleus. Scout and Ledger are read-only. Proof, Forge, and Concierge are prepare-only."
+          >
+            <svg class="network-field" viewBox="0 0 760 700" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+              <defs>
+                <radialGradient id="network-core-glow" cx="50%" cy="50%" r="50%">
+                  <stop offset="0" stop-color="#1bd4ff" stop-opacity="0.28" />
+                  <stop offset="0.48" stop-color="#2f7df6" stop-opacity="0.12" />
+                  <stop offset="1" stop-color="#2f7df6" stop-opacity="0" />
+                </radialGradient>
+                <filter id="network-signal-glow" x="-250%" y="-250%" width="500%" height="500%">
+                  <feGaussianBlur stdDeviation="4" result="blur" />
+                  <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+                </filter>
+              </defs>
+
+              <g class="network-mesh">
+                <path d="M18 602L112 520L202 612L318 560L412 644L512 558L648 620L742 528" />
+                <path d="M32 154L118 82L208 170L315 104L436 158L548 72L718 168" />
+                <path d="M118 82L112 520M208 170L202 612M315 104L318 560M436 158L412 644M548 72L512 558M718 168L648 620" />
+                <path d="M18 602L202 612M32 154L208 170M202 612L412 644M208 170L436 158M412 644L648 620M436 158L718 168" />
+              </g>
+
+              <circle class="network-halo" cx="380" cy="350" r="238" fill="url(#network-core-glow)" />
+              <g class="network-rings">
+                <circle class="network-ring ring-one" cx="380" cy="350" r="112" />
+                <circle class="network-ring ring-two" cx="380" cy="350" r="174" />
+                <circle class="network-ring ring-three" cx="380" cy="350" r="246" />
+                <circle class="network-ring ring-four" cx="380" cy="350" r="308" />
+              </g>
+
+              <g class="network-crosslinks">
+                <path d="M390 80Q214 118 92 208Q52 362 104 520Q244 634 380 350Z" />
+                <path d="M390 80Q558 108 648 218Q716 382 622 522Q516 626 380 350Z" />
+                <path d="M92 208Q302 254 648 218M104 520Q330 458 622 522" />
+              </g>
+
+              <g class="network-links">
+                <path id="network-path-scout" class="network-link tone-cyan" d="M380 350Q386 206 390 80" />
+                <path id="network-path-proof" class="network-link tone-cyan" d="M380 350Q240 302 92 208" />
+                <path id="network-path-forge" class="network-link tone-green" d="M380 350Q245 452 104 520" />
+                <path id="network-path-ledger" class="network-link tone-cyan" d="M380 350Q520 298 648 218" />
+                <path id="network-path-concierge" class="network-link tone-amber" d="M380 350Q502 432 622 522" />
+              </g>
+
+              <g class="network-particles">
+                <circle cx="202" cy="126" r="3" /><circle cx="252" cy="188" r="2" />
+                <circle cx="520" cy="134" r="2" /><circle cx="594" cy="176" r="3" />
+                <circle cx="182" cy="374" r="2" /><circle cx="154" cy="456" r="3" />
+                <circle cx="558" cy="392" r="2" /><circle cx="688" cy="412" r="3" />
+                <circle cx="258" cy="574" r="2" /><circle cx="494" cy="590" r="3" />
+              </g>
+
+              <g class="network-signals" filter="url(#network-signal-glow)">
+                <circle class="network-signal tone-cyan" r="4"><animateMotion dur="3.8s" repeatCount="indefinite"><mpath href="#network-path-scout" /></animateMotion></circle>
+                <circle class="network-signal tone-cyan signal-delay-one" r="4"><animateMotion dur="4.6s" repeatCount="indefinite"><mpath href="#network-path-proof" /></animateMotion></circle>
+                <circle class="network-signal tone-green signal-delay-two" r="4"><animateMotion dur="4.2s" repeatCount="indefinite"><mpath href="#network-path-forge" /></animateMotion></circle>
+                <circle class="network-signal tone-cyan signal-delay-three" r="4"><animateMotion dur="4.8s" repeatCount="indefinite"><mpath href="#network-path-ledger" /></animateMotion></circle>
+                <circle class="network-signal tone-amber signal-delay-four" r="4"><animateMotion dur="4.4s" repeatCount="indefinite"><mpath href="#network-path-concierge" /></animateMotion></circle>
+              </g>
+            </svg>
+
+            <div class="network-core" aria-hidden="true">
+              <span class="network-core-orbit orbit-a"></span>
+              <span class="network-core-orbit orbit-b"></span>
+              <svg class="network-core-mark" viewBox="0 0 48 48">
+                <ellipse cx="24" cy="24" rx="17" ry="7" />
+                <ellipse cx="24" cy="24" rx="17" ry="7" transform="rotate(60 24 24)" />
+                <ellipse cx="24" cy="24" rx="17" ry="7" transform="rotate(120 24 24)" />
+                <circle cx="24" cy="24" r="3.2" />
+              </svg>
+              <strong>TECH TOOLS</strong>
             </div>
-            <div class="console-connector" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
-            <div class="action-queue">
-              <div class="queue-title">Keep · Fix · Cut · Grow</div>
-              <ul>
-                <li><span></span></li>
-                <li><span></span></li>
-                <li><span></span></li>
-                <li><span></span></li>
-              </ul>
-              <div class="queue-arrow" aria-hidden="true">→</div>
+
+            <div class="network-agent agent-scout tone-cyan" aria-hidden="true">
+              <span class="network-agent-orbit"></span><span class="network-agent-icon">SC</span>
+              <span class="network-agent-copy"><strong>Scout</strong><small>Market &amp; offer</small><em><i></i>read-only</em></span>
             </div>
-            <div class="approval-note">
-              <img src="assets/brand-mark-techtools.jpg" width="42" height="42" alt="" />
-              <span>Prioritized with TeeJay, then implemented with your team</span>
+            <div class="network-agent agent-proof tone-cyan" aria-hidden="true">
+              <span class="network-agent-orbit"></span><span class="network-agent-icon">PF</span>
+              <span class="network-agent-copy"><strong>Proof</strong><small>Evidence &amp; SEO</small><em><i></i>prepare-only</em></span>
             </div>
-            <div class="profit-line" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+            <div class="network-agent agent-forge tone-green" aria-hidden="true">
+              <span class="network-agent-orbit"></span><span class="network-agent-icon">FG</span>
+              <span class="network-agent-copy"><strong>Forge</strong><small>Site &amp; release</small><em><i></i>prepare-only</em></span>
+            </div>
+            <div class="network-agent agent-ledger tone-cyan" aria-hidden="true">
+              <span class="network-agent-orbit"></span><span class="network-agent-icon">LD</span>
+              <span class="network-agent-copy"><strong>Ledger</strong><small>Revenue analyst</small><em><i></i>read-only</em></span>
+            </div>
+            <div class="network-agent agent-concierge tone-amber" aria-hidden="true">
+              <span class="network-agent-orbit"></span><span class="network-agent-icon">CC</span>
+              <span class="network-agent-copy"><strong>Concierge</strong><small>Lead &amp; sales</small><em><i></i>prepare-only</em></span>
+            </div>
           </div>
         </div>
       </section>
