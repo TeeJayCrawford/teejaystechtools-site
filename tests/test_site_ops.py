@@ -91,6 +91,14 @@ class SiteOpsTests(unittest.TestCase):
         self.assertIn("prepare-only", hero)
         self.assertNotIn('class="ai-audit-promo"', source)
 
+    def test_ai_audit_collects_market_query_and_optional_explicit_competitors(self):
+        root = Path(__file__).resolve().parents[1]
+        source = (root / "free-ai-search-audit.html").read_text(encoding="utf-8")
+        self.assertIn('name="locations"', source)
+        self.assertIn('name="problem"', source)
+        self.assertIn('name="competitors"', source)
+        self.assertIn("Up to 3 business names, separated by commas", source)
+
 
 if __name__ == "__main__":
     unittest.main()
