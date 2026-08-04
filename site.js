@@ -43,6 +43,13 @@
     window.addEventListener('resize', function () {
       if (window.innerWidth > 980) setMenuState(false);
     });
+
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape' && nav.classList.contains('is-open')) {
+        setMenuState(false);
+        menuButton.focus();
+      }
+    });
   }
 
   if (header) {
@@ -129,13 +136,31 @@
     const service = intakeForm.querySelector('[name="serviceCode"]');
     const sourcePage = intakeForm.querySelector('[name="sourcePage"]');
     const submitButton = intakeForm.querySelector('button[type="submit"]');
+    const intakeTitle = document.querySelector('[data-intake-title]');
+    const intakeLede = document.querySelector('[data-intake-lede]');
     const params = new URLSearchParams(window.location.search);
     const requestedService = params.get('service');
-    if (service && service.tagName === 'SELECT' && requestedService) {
-      const matchingOption = Array.from(service.options).find(function (option) {
-        return option.value === requestedService;
-      });
-      if (matchingOption) service.value = requestedService;
+    if (service && service.tagName === 'SELECT') {
+      service.value = 'not-sure';
+      if (requestedService) {
+        const matchingOption = Array.from(service.options).find(function (option) {
+          return option.value === requestedService;
+        });
+        if (matchingOption) {
+          service.value = requestedService;
+          const requestedLabel = matchingOption.textContent.trim();
+          if (intakeTitle) {
+            intakeTitle.textContent = requestedService === 'free-ai-search-audit'
+              ? 'Request your free AI Search Visibility Audit.'
+              : 'Request pricing for ' + requestedLabel + '.';
+          }
+          if (intakeLede) {
+            intakeLede.textContent = requestedService === 'free-ai-search-audit'
+              ? 'Share the business and website you want reviewed. TeeJay confirms the audit scope and next step in writing.'
+              : 'Share the business, current systems, and outcome you need. TeeJay reviews every request directly and confirms the next step in writing.';
+          }
+        }
+      }
     }
 
     if (sourcePage) {
