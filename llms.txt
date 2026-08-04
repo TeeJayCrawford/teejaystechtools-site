@@ -1,6 +1,6 @@
 # TeeJay's Tech Tools
 
-> Practical AI search visibility, websites, workflow automation, and dealership technology for owner-led businesses. TeeJay Crawford is the founder and accountable operator.
+> Future-ready dealer websites, AI search visibility, workflow automation, and dealership technology for owner-led businesses. TeeJay Crawford is the founder and accountable operator.
 
 Important notes:
 
@@ -41,7 +41,7 @@ Site references:
 - [Inventory Merchandising Guard](https://teejaystechtools.com/inventory-merchandising.html): Guarded listing-quality operations.
 - [Reputation and Local Visibility Guard](https://teejaystechtools.com/reputation-visibility.html): Review and local-presence operations.
 - [Marketing Spend Truth Pack](https://teejaystechtools.com/marketing-truth.html): Marketing measurement.
-- [Feed-backed dealer websites](https://teejaystechtools.com/dealer-websites.html): Inventory-driven shopper experiences.
+- [Future-ready dealer websites](https://teejaystechtools.com/dealer-websites.html): Flagship inventory-feed website service for powersports, trailer, and independent auto dealers.
 - [Owner's Morning Brief](https://teejaystechtools.com/owners-morning-brief.html): Paid-pilot owner briefing product.
 
 ## Optional
