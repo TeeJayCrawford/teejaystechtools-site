@@ -1,4 +1,5 @@
 (function () {
+  const ATTRIBUTION_KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid', 'gbraid', 'wbraid', 'fbclid'];
   const track = function (eventName, parameters) {
     if (window.TTTAnalytics && typeof window.TTTAnalytics.track === 'function') {
       window.TTTAnalytics.track(eventName, parameters);
@@ -64,12 +65,44 @@
     node.textContent = String(new Date().getFullYear());
   });
 
+  const pageParameters = new URLSearchParams(window.location.search);
+  const attributionParameters = new URLSearchParams();
+  ATTRIBUTION_KEYS.forEach(function (key) {
+    const value = pageParameters.get(key);
+    if (value) attributionParameters.set(key, value.slice(0, 120));
+  });
+
+  if (attributionParameters.size > 0) {
+    document.querySelectorAll('a[href]').forEach(function (node) {
+      const rawHref = node.getAttribute('href');
+      if (!rawHref || rawHref.startsWith('#') || /^(?:mailto:|tel:|javascript:)/i.test(rawHref)) return;
+      const target = new URL(rawHref, window.location.href);
+      if (target.origin !== window.location.origin) return;
+      attributionParameters.forEach(function (value, key) {
+        if (!target.searchParams.has(key)) target.searchParams.set(key, value);
+      });
+      node.setAttribute('href', target.pathname + target.search + target.hash);
+    });
+  }
+
   document.querySelectorAll('[data-track]').forEach(function (node) {
     node.addEventListener('click', function () {
       track('select_content', {
         content_type: 'site_cta',
         item_id: node.getAttribute('data-track')
       });
+    });
+  });
+
+  document.querySelectorAll('a[href^="tel:"]').forEach(function (node) {
+    node.addEventListener('click', function () {
+      track('click_to_call', { link_location: window.location.pathname });
+    });
+  });
+
+  document.querySelectorAll('a[href^="mailto:"]').forEach(function (node) {
+    node.addEventListener('click', function () {
+      track('click_to_email', { link_location: window.location.pathname });
     });
   });
 
@@ -165,7 +198,7 @@
 
     if (sourcePage) {
       const attribution = new URLSearchParams();
-      ['utm_source', 'utm_medium', 'utm_campaign'].forEach(function (key) {
+      ATTRIBUTION_KEYS.forEach(function (key) {
         const value = params.get(key);
         if (value) attribution.set(key, value.slice(0, 120));
       });
