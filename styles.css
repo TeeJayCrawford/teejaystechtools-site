@@ -4865,7 +4865,10 @@ h3 {
 
 .dealer-web-stage {
   position: relative;
-  min-height: 590px;
+  display: grid;
+  min-height: 0;
+  gap: 16px;
+  margin: 0;
 }
 
 .browser-frame,
@@ -4895,14 +4898,13 @@ h3 {
 }
 
 .dealer-web-desktop {
-  position: absolute;
-  inset: 25px 2px 25px 0;
+  position: relative;
 }
 
 .dealer-web-desktop img {
   width: 100%;
   height: calc(100% - 30px);
-  object-fit: cover;
+  object-fit: contain;
   object-position: top;
 }
 .dealer-web-desktop picture,
@@ -4913,6 +4915,45 @@ h3 {
 .homepage-websites-visual .browser-frame picture img,
 .future-app-frame .browser-frame picture img,
 .work-browser picture img { height: 100%; }
+
+.proof-browser {
+  width: 100%;
+}
+
+.proof-browser .proof-browser-picture {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1440 / 898;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.proof-browser .proof-browser-picture img,
+.work-browser .proof-browser-picture img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center top;
+}
+
+.proof-site-caption {
+  margin: 0;
+  color: #99aec5;
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+
+.proof-site-caption strong,
+.proof-site-caption a {
+  color: #2bcfff;
+}
+
+.proof-site-caption a,
+.proof-site-link {
+  text-underline-offset: 4px;
+}
 
 .phone-frame {
   overflow: hidden;
@@ -5345,6 +5386,48 @@ h3 {
   min-width: 0;
 }
 
+.dealer-work-featured {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: minmax(0, 1.55fr) minmax(280px, 0.75fr);
+  align-items: center;
+  gap: clamp(30px, 5vw, 72px);
+  padding-bottom: 48px;
+  border-bottom: 1px solid rgba(117, 164, 230, 0.28);
+}
+
+.dealer-work-featured .work-browser {
+  display: block;
+  height: auto;
+  margin: 0;
+}
+
+.dealer-work-featured .proof-browser-picture {
+  height: auto;
+}
+
+.dealer-work-rail .dealer-work-featured h3 {
+  font-size: clamp(2.7rem, 4.5vw, 5.2rem);
+  line-height: 0.96;
+  letter-spacing: -0.045em;
+}
+
+.proof-kicker {
+  margin: 0 0 12px;
+  color: #f4b447 !important;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.proof-site-link {
+  display: inline-flex;
+  margin-top: 18px;
+  color: #2bcfff;
+  font-weight: 800;
+}
+
 .work-browser {
   height: clamp(255px, 25vw, 380px);
   margin-bottom: 26px;
@@ -5358,11 +5441,11 @@ h3 {
   transition: transform 900ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.dealer-work-rail article:nth-child(2) .work-browser img {
+.dealer-work-rail article:nth-child(3) .work-browser img {
   object-position: center 1.4%;
 }
 
-.dealer-work-rail article:hover .work-browser img {
+.dealer-work-rail article:not(.dealer-work-featured):hover .work-browser img {
   transform: translateY(-3%);
 }
 
@@ -5649,19 +5732,20 @@ h3 {
 }
 
 .homepage-websites-visual {
-  position: relative;
-  min-height: 560px;
+  display: grid;
+  min-height: 0;
+  gap: 16px;
+  margin: 0;
 }
 
 .homepage-websites-visual .browser-frame {
-  position: absolute;
-  inset: 0 5% 8% 0;
+  position: relative;
 }
 
 .homepage-websites-visual .browser-frame img {
   width: 100%;
   height: calc(100% - 30px);
-  object-fit: cover;
+  object-fit: contain;
   object-position: top;
 }
 
@@ -5694,7 +5778,7 @@ h3 {
 
   .dealer-web-stage,
   .homepage-websites-visual {
-    min-height: 620px;
+    min-height: 0;
   }
 
   .dealer-lane-split article {
@@ -5741,7 +5825,7 @@ h3 {
 
   .dealer-web-stage,
   .homepage-websites-visual {
-    min-height: 450px;
+    min-height: 0;
   }
 
   .dealer-web-phone {
@@ -5772,13 +5856,18 @@ h3 {
   }
 
   .dealer-work-rail {
-    overflow-x: auto;
-    grid-template-columns: repeat(3, minmax(330px, 82vw));
-    padding-bottom: 18px;
-    scroll-snap-type: x mandatory;
+    overflow: visible;
+    grid-template-columns: 1fr;
+    padding-bottom: 0;
+    scroll-snap-type: none;
   }
 
   .dealer-work-rail article { scroll-snap-align: start; }
+
+  .dealer-work-featured {
+    grid-template-columns: 1fr;
+    padding-bottom: 38px;
+  }
 
   .dealer-process-rail {
     grid-template-columns: repeat(2, 1fr);
@@ -5816,11 +5905,11 @@ h3 {
 
   .dealer-web-stage,
   .homepage-websites-visual {
-    min-height: 340px;
+    min-height: 0;
   }
 
   .dealer-web-desktop {
-    inset: 0 0 20px;
+    inset: auto;
   }
 
   .dealer-web-phone {
@@ -5866,6 +5955,11 @@ h3 {
   }
 
   .dealer-work-heading { gap: 18px; }
+
+  .dealer-work-rail .dealer-work-featured h3 {
+    font-size: clamp(2.2rem, 10.5vw, 2.85rem);
+    overflow-wrap: normal;
+  }
 
   .dealer-work-rail {
     grid-template-columns: repeat(3, minmax(285px, 88vw));
@@ -6316,6 +6410,9 @@ h3 {
 .hub-phone { position: absolute; right: 0; bottom: 0; width: 150px; height: 300px; overflow: hidden; border: 2px solid #24c8ff; border-radius: 26px; background: #06111f; box-shadow: 0 20px 65px rgba(0,0,0,.5); }
 .hub-phone img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; }
 .hub-device-stage figcaption { position: absolute; left: 0; bottom: -8px; max-width: calc(100% - 180px); color: #93abc3; font-size: 0.76rem; line-height: 1.45; }
+.hub-device-stage.hub-device-stage-proof { display: grid; min-height: 0; gap: 16px; }
+.hub-device-stage-proof .browser-frame { position: relative; }
+.hub-device-stage-proof figcaption { position: static; max-width: none; }
 
 .custom-app-proof { position: relative; margin: 0; padding: 18px; border: 1px solid rgba(41, 194, 255, 0.5); border-radius: 14px; background: rgba(7, 24, 42, 0.88); box-shadow: 0 30px 90px rgba(0, 0, 0, 0.34); }
 .custom-app-proof-frame { overflow: hidden; aspect-ratio: 1.35; border: 1px solid rgba(82, 161, 218, 0.44); border-radius: 8px; background: #06111f; }
@@ -6450,7 +6547,9 @@ h3 {
   .homepage-stack-map i { width: 42px; height: 70px; }
   .homepage-stack-map small { font-size: 0.49rem; letter-spacing: 0; transform: rotate(-90deg); }
   .lane-list article > p { grid-column: 1 / -1; }
-  .privacy-settings-trigger { right: 8px; bottom: max(8px, env(safe-area-inset-bottom)); left: auto; min-height: 36px; padding: 7px 9px; font-size: 0.65rem; }
+  .privacy-settings-trigger { right: 8px; bottom: max(8px, env(safe-area-inset-bottom)); left: auto; width: 40px; min-height: 40px; padding: 8px; border-radius: 50%; font-size: 0.65rem; }
+  .privacy-settings-trigger span { display: none; }
+  .privacy-settings-trigger .privacy-cookie-icon { margin: 0; }
   .contact-grid .lead-form { order: -1; }
 }
 
