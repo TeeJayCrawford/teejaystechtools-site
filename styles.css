@@ -72,6 +72,26 @@ body::before {
     linear-gradient(180deg, #06101d 0%, var(--navy) 60%, #06101c 100%);
 }
 
+main {
+  position: relative;
+  isolation: isolate;
+}
+
+.motion-ready [data-cinematic-reveal] {
+  opacity: 0;
+  transform: translate3d(0, 28px, 0);
+  transition:
+    opacity 700ms cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms),
+    transform 820ms cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+.motion-ready [data-cinematic-reveal].is-cinematically-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  will-change: auto;
+}
+
 img {
   display: block;
   max-width: 100%;
@@ -157,6 +177,7 @@ h3 {
 }
 
 .button {
+  position: relative;
   display: inline-flex;
   min-height: 58px;
   align-items: center;
@@ -170,7 +191,27 @@ h3 {
   line-height: 1.2;
   text-align: center;
   text-decoration: none;
+  isolation: isolate;
+  overflow: hidden;
   transition: background 180ms ease, border-color 180ms ease, color 180ms ease, transform 180ms ease;
+}
+
+.button::before {
+  position: absolute;
+  top: -45%;
+  bottom: -45%;
+  left: -55%;
+  z-index: -1;
+  width: 34%;
+  content: '';
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.22), transparent);
+  transform: skewX(-24deg);
+  transition: left 520ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.button:hover::before,
+.button:focus-visible::before {
+  left: 122%;
 }
 
 .button:hover {
@@ -299,15 +340,51 @@ h3 {
 }
 
 .hero-section {
+  --hero-spot-x: 76%;
+  --hero-spot-y: 48%;
   position: relative;
   overflow: clip;
   border-bottom: 1px solid var(--rule);
   background:
-    radial-gradient(circle at 76% 48%, rgba(27, 212, 255, 0.075), transparent 28%),
+    radial-gradient(circle at var(--hero-spot-x) var(--hero-spot-y), rgba(27, 212, 255, 0.12), transparent 27%),
     radial-gradient(circle at 84% 54%, rgba(47, 125, 246, 0.1), transparent 38%);
 }
 
+.hero-section::before,
+.hero-section::after {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  content: '';
+}
+
+.hero-section::before {
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(58, 139, 211, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(58, 139, 211, 0.035) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: radial-gradient(circle at 74% 48%, black, transparent 66%);
+  opacity: 0.64;
+  animation: cinematic-grid-drift 28s linear infinite;
+}
+
+.hero-section::after {
+  right: -8%;
+  bottom: -32%;
+  width: 68%;
+  height: 45%;
+  border: 1px solid rgba(27, 212, 255, 0.13);
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(27, 212, 255, 0.1), transparent 65%);
+  box-shadow: 0 0 80px rgba(27, 212, 255, 0.08);
+  transform: perspective(500px) rotateX(68deg);
+  animation: cinematic-ground-pulse 6.8s ease-in-out infinite;
+}
+
 .hero-inner {
+  position: relative;
+  z-index: 1;
   display: grid;
   width: min(var(--max), calc(100% - (var(--gutter) * 2)));
   min-height: min(790px, calc(100svh - 94px));
@@ -536,6 +613,11 @@ h3 {
   margin-bottom: -42px;
   top: -42px;
   isolation: isolate;
+  --neural-x: 0px;
+  --neural-y: 0px;
+  --core-x: 0px;
+  --core-y: 0px;
+  filter: saturate(1.12) contrast(1.03);
 }
 
 .network-field {
@@ -544,6 +626,9 @@ h3 {
   width: 100%;
   height: 100%;
   overflow: visible;
+  transform: translate3d(var(--neural-x), var(--neural-y), 0) scale(1.025);
+  transform-origin: center;
+  transition: transform 180ms ease-out;
 }
 
 .network-mesh path,
@@ -599,6 +684,33 @@ h3 {
   animation: network-spin 66s linear infinite reverse;
 }
 
+.network-neural-orbits path {
+  fill: none;
+  stroke: rgba(27, 212, 255, 0.28);
+  stroke-width: 1.2;
+  stroke-dasharray: 2 9;
+  vector-effect: non-scaling-stroke;
+}
+
+.network-neural-orbits path:nth-child(1) {
+  stroke: rgba(27, 212, 255, 0.38);
+  animation: neural-orbit-flow 7s linear infinite;
+}
+
+.network-neural-orbits path:nth-child(2) {
+  stroke: rgba(98, 229, 152, 0.25);
+  animation: neural-orbit-flow 9s linear infinite reverse;
+}
+
+.network-neural-orbits path:nth-child(3) {
+  stroke: rgba(244, 180, 71, 0.25);
+  animation: neural-orbit-flow 11s linear infinite;
+}
+
+.orbit-signal-a { fill: var(--network-cyan); }
+.orbit-signal-b { fill: var(--network-green); }
+.orbit-signal-c { fill: var(--network-amber); }
+
 .network-link {
   fill: none;
   stroke-width: 1.8;
@@ -632,8 +744,8 @@ h3 {
   top: 50%;
   left: 50%;
   display: flex;
-  width: 172px;
-  height: 172px;
+  width: 208px;
+  height: 208px;
   border: 1px solid rgba(27, 212, 255, 0.82);
   border-radius: 50%;
   align-items: center;
@@ -646,7 +758,8 @@ h3 {
     0 0 0 18px rgba(47, 125, 246, 0.025),
     0 0 54px rgba(27, 212, 255, 0.28),
     inset 0 0 30px rgba(27, 212, 255, 0.16);
-  transform: translate(-50%, -50%);
+  transform: translate(calc(-50% + var(--core-x)), calc(-50% + var(--core-y)));
+  transition: transform 180ms ease-out;
   animation: network-core-breathe 4.8s ease-in-out infinite;
 }
 
@@ -656,6 +769,16 @@ h3 {
   border: 1px solid rgba(75, 145, 255, 0.32);
   border-radius: inherit;
   content: '';
+}
+
+.network-core::after {
+  position: absolute;
+  inset: -44px;
+  border: 1px solid rgba(27, 212, 255, 0.13);
+  border-radius: 50%;
+  content: '';
+  box-shadow: 0 0 46px rgba(27, 212, 255, 0.13), inset 0 0 38px rgba(47, 125, 246, 0.08);
+  animation: neural-core-scan 3.8s ease-in-out infinite;
 }
 
 .network-core-orbit {
@@ -693,6 +816,46 @@ h3 {
   fill: var(--network-cyan);
   stroke: none;
 }
+
+.network-brain-mark {
+  width: 96px;
+  height: 80px;
+  margin-bottom: 2px;
+}
+
+.network-brain-mark .brain-outline,
+.network-brain-mark .brain-circuits {
+  fill: none;
+  stroke: var(--network-cyan);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.network-brain-mark .brain-outline {
+  stroke-width: 2.25;
+}
+
+.network-brain-mark .brain-circuits {
+  stroke-width: 1.65;
+  opacity: 0.88;
+}
+
+.network-brain-mark .brain-circuits > circle:not(.brain-synapse) {
+  fill: #031526;
+  stroke: var(--network-cyan);
+  stroke-width: 1.6;
+}
+
+.network-brain-mark .brain-synapse {
+  fill: #dffaff;
+  filter: drop-shadow(0 0 4px #1bd4ff);
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: brain-synapse-pulse 2.4s ease-in-out infinite;
+}
+
+.network-brain-mark .synapse-b { animation-delay: -0.8s; }
+.network-brain-mark .synapse-c { animation-delay: -1.6s; }
 
 .network-core strong {
   position: relative;
@@ -830,6 +993,64 @@ h3 {
 
 @keyframes network-twinkle {
   50% { opacity: 0.95; transform: scale(1.65); }
+}
+
+@keyframes neural-orbit-flow {
+  to { stroke-dashoffset: -110; }
+}
+
+@keyframes brain-synapse-pulse {
+  50% { opacity: 0.34; transform: scale(2.3); }
+}
+
+@keyframes neural-core-scan {
+  50% { opacity: 0.32; transform: scale(1.09); }
+}
+
+@keyframes cinematic-grid-drift {
+  to { background-position: 72px 72px; }
+}
+
+@keyframes cinematic-ground-pulse {
+  50% { opacity: 0.48; transform: perspective(500px) rotateX(68deg) scale(1.04); }
+}
+
+.motion-paused .agent-network-hero *,
+.agent-network-hero.is-dormant * {
+  animation-play-state: paused !important;
+}
+
+.catalog-row,
+.lane-list article,
+.principle-list article,
+.dealer-stack-list > a,
+.homepage-stack-list > a,
+.proof-ledger article,
+.agent {
+  transition:
+    border-color 220ms ease,
+    background 220ms ease,
+    box-shadow 260ms ease,
+    transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
+    padding 220ms ease;
+}
+
+.catalog-row:hover,
+.lane-list article:hover,
+.principle-list article:hover,
+.proof-ledger article:hover,
+.agent:hover {
+  border-color: rgba(75, 145, 255, 0.72);
+  box-shadow: 0 22px 60px rgba(1, 9, 18, 0.18), inset 0 0 42px rgba(47, 125, 246, 0.04);
+  transform: translateY(-4px);
+}
+
+.motion-ready .catalog-row[data-cinematic-reveal].is-cinematically-visible:hover,
+.motion-ready .lane-list article[data-cinematic-reveal].is-cinematically-visible:hover,
+.motion-ready .principle-list article[data-cinematic-reveal].is-cinematically-visible:hover,
+.motion-ready .proof-ledger article[data-cinematic-reveal].is-cinematically-visible:hover,
+.motion-ready .agent[data-cinematic-reveal].is-cinematically-visible:hover {
+  transform: translateY(-4px);
 }
 
 .outcome-rail {
