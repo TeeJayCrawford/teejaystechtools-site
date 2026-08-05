@@ -4,11 +4,11 @@ Static multi-page website for free hosting on GitHub Pages.
 
 ## Pages
 
-- `index.html` — home
-- `services.html` — service overview
-- `about.html` — background and experience
-- `faq.html` — common questions
-- `contact.html` — email/phone/contact form
+- `index.html`, home
+- `services.html`, service overview
+- `about.html`, background and experience
+- `faq.html`, common questions
+- `contact.html`, email/phone/contact form
 
 ## Contact wiring
 
