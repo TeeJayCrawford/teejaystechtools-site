@@ -1,6 +1,6 @@
 # TeeJay's Tech Tools
 
-> ATOM-themed, future-ready dealer websites, AI search visibility, workflow automation, and dealership technology for owner-led businesses. TeeJay Crawford is the founder and accountable operator.
+> Future-ready dealer websites, inventory feeds, Google Ads measurement, workflow automation, and dealership technology. TeeJay Crawford is the founder and accountable operator.
 
 Important notes:
 
@@ -18,8 +18,9 @@ Site references:
 
 ## Start here
 
-- [Free AI Search Visibility Audit](https://teejaystechtools.com/free-ai-search-audit.html): Public-source visibility review for businesses.
-- [Small-business solutions](https://teejaystechtools.com/small-business.html): Websites, local visibility, automation, and AI.
+- [Future-ready dealer websites](https://teejaystechtools.com/dealer-websites.html): Flagship inventory-feed website service for powersports, trailer, and independent auto dealers.
+- [Inventory feeds and merchandising](https://teejaystechtools.com/inventory-merchandising.html): Feed health, descriptions, media and option exceptions, and dealer-controlled inventory quality.
+- [Google Ads and marketing measurement](https://teejaystechtools.com/marketing-truth.html): Campaign, call, form, analytics, inventory-promotion, and vendor measurement.
 - [Dealership solutions](https://teejaystechtools.com/dealerships.html): Complete dealer website, software, merchandising, reputation, and operating-service stack.
 - [Products](https://teejaystechtools.com/products.html): Current tools and scoped offers.
 - [About TeeJay Crawford](https://teejaystechtools.com/about.html): Founder background and operating approach.
@@ -32,21 +33,20 @@ Site references:
 - [Apple Maps](https://teejaystechtools.com/apple-maps.html): Apple Business Connect and map presence.
 - [Local SEO](https://teejaystechtools.com/local-seo.html): Local discovery and search foundations.
 - [Online stores](https://teejaystechtools.com/online-stores.html): Practical commerce setup.
-- [Consulting and implementation](https://teejaystechtools.com/consulting.html): Technology planning and delivery.
 
 ## Dealership systems
 
-- [Dealer Command System](https://teejaystechtools.com/dealer-command-system.html): Owner-facing dealership operating module.
-- [DealerLister Facebook inventory plugin](https://teejaystechtools.com/autolister.html): Human-reviewed Marketplace listing preparation from authorized dealer inventory.
-- [Inventory descriptions and merchandising](https://teejaystechtools.com/inventory-descriptions.html): VIN-matched, evidence-backed vehicle descriptions and dealer-controlled review.
 - [Inventory Merchandising Guard](https://teejaystechtools.com/inventory-merchandising.html): Guarded listing-quality operations.
+- [Inventory descriptions and merchandising](https://teejaystechtools.com/inventory-descriptions.html): VIN-matched, evidence-backed vehicle descriptions and dealer-controlled review.
+- [Google Ads and marketing measurement](https://teejaystechtools.com/marketing-truth.html): Campaign and shopper-signal measurement.
+- [DealerLister Facebook inventory plugin](https://teejaystechtools.com/autolister.html): Human-reviewed Marketplace listing preparation from authorized dealer inventory.
 - [Reputation management](https://teejaystechtools.com/reputation-visibility.html): Exact-location review, response, listing-consistency, escalation, and public-state operations.
-- [Marketing Spend Truth Pack](https://teejaystechtools.com/marketing-truth.html): Marketing measurement.
-- [Future-ready dealer websites](https://teejaystechtools.com/dealer-websites.html): Flagship inventory-feed website service for powersports, trailer, and independent auto dealers.
 - [Custom dealer software](https://teejaystechtools.com/custom-dealer-software.html): Inventory applications, integrations, dashboards, workflow automation, and governed agents built around dealer operations.
+- [Dealer Command System](https://teejaystechtools.com/dealer-command-system.html): Owner-facing dealership operating module.
 - [Owner's Morning Brief](https://teejaystechtools.com/owners-morning-brief.html): Paid-pilot owner briefing product.
 
 ## More
 
 - [FAQ](https://teejaystechtools.com/faq.html): Questions and boundaries.
 - [Newsletter](https://teejaystechtools.com/newsletter/): Updates and resources.
+- [Free AI Search Visibility Audit](https://teejaystechtools.com/free-ai-search-audit.html): Optional public-source visibility review for businesses.

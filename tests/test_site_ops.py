@@ -85,7 +85,8 @@ class SiteOpsTests(unittest.TestCase):
 
         self.assertIn("Dealer websites and custom tools built for the future.", hero)
         self.assertIn('href="dealer-websites.html"', hero)
-        self.assertIn('href="free-ai-search-audit.html"', hero)
+        self.assertIn('href="#dealer-growth-stack"', hero)
+        self.assertIn("Google Ads", hero)
         self.assertIn('class="agent-network-hero"', hero)
         self.assertIn("read-only", hero)
         self.assertIn("prepare-only", hero)

@@ -61,6 +61,87 @@
     window.addEventListener('scroll', updateHeader, { passive: true });
   }
 
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const revealTargets = Array.from(document.querySelectorAll([
+    'main > section',
+    '.catalog-row',
+    '.lane-list > article',
+    '.principle-list > article',
+    '.dealer-stack-list > a',
+    '.homepage-stack-list > a',
+    '.proof-ledger > article',
+    '.agent-map > article'
+  ].join(','))).filter(function (node) {
+    return !node.matches('main > section:first-child');
+  });
+
+  if (!reducedMotion && revealTargets.length > 0) {
+    document.documentElement.classList.add('motion-ready');
+    revealTargets.forEach(function (node, index) {
+      node.setAttribute('data-cinematic-reveal', '');
+      node.style.setProperty('--reveal-delay', String((index % 5) * 45) + 'ms');
+    });
+
+    if ('IntersectionObserver' in window) {
+      const revealObserver = new IntersectionObserver(function (entries, observer) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add('is-cinematically-visible');
+          observer.unobserve(entry.target);
+        });
+      }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+      revealTargets.forEach(function (node) { revealObserver.observe(node); });
+    } else {
+      revealTargets.forEach(function (node) { node.classList.add('is-cinematically-visible'); });
+    }
+  }
+
+  const neuralHero = document.querySelector('.agent-network-hero');
+  const homeHero = document.querySelector('.hero-section');
+  const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+  if (!reducedMotion && finePointer && neuralHero && homeHero) {
+    let neuralFrame = 0;
+    let pointerX = 0;
+    let pointerY = 0;
+
+    const paintNeuralDepth = function () {
+      neuralFrame = 0;
+      neuralHero.style.setProperty('--neural-x', String(pointerX * 8) + 'px');
+      neuralHero.style.setProperty('--neural-y', String(pointerY * 7) + 'px');
+      neuralHero.style.setProperty('--core-x', String(pointerX * 15) + 'px');
+      neuralHero.style.setProperty('--core-y', String(pointerY * 12) + 'px');
+      homeHero.style.setProperty('--hero-spot-x', String(76 + (pointerX * 4)) + '%');
+      homeHero.style.setProperty('--hero-spot-y', String(48 + (pointerY * 4)) + '%');
+    };
+
+    homeHero.addEventListener('pointermove', function (event) {
+      const bounds = homeHero.getBoundingClientRect();
+      pointerX = ((event.clientX - bounds.left) / bounds.width) - 0.5;
+      pointerY = ((event.clientY - bounds.top) / bounds.height) - 0.5;
+      if (!neuralFrame) neuralFrame = window.requestAnimationFrame(paintNeuralDepth);
+    }, { passive: true });
+
+    homeHero.addEventListener('pointerleave', function () {
+      pointerX = 0;
+      pointerY = 0;
+      if (!neuralFrame) neuralFrame = window.requestAnimationFrame(paintNeuralDepth);
+    }, { passive: true });
+  }
+
+  if (!reducedMotion && neuralHero && 'IntersectionObserver' in window) {
+    const neuralObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        neuralHero.classList.toggle('is-dormant', !entry.isIntersecting);
+      });
+    }, { threshold: 0.02 });
+    neuralObserver.observe(neuralHero);
+  }
+
+  document.addEventListener('visibilitychange', function () {
+    document.documentElement.classList.toggle('motion-paused', document.hidden);
+  });
+
   document.querySelectorAll('[data-current-year]').forEach(function (node) {
     node.textContent = String(new Date().getFullYear());
   });
