@@ -99,6 +99,32 @@
   const neuralHero = document.querySelector('.agent-network-hero');
   const homeHero = document.querySelector('.hero-section');
   const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  const coarsePointer = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+  const networkField = document.querySelector('.network-field');
+
+  if (document.body.classList.contains('motion-booting')) {
+    let cinematicMotionStarted = false;
+    const startCinematicMotion = function () {
+      if (cinematicMotionStarted) return;
+      cinematicMotionStarted = true;
+      document.body.classList.remove('motion-booting');
+      if (networkField && typeof networkField.unpauseAnimations === 'function') {
+        networkField.unpauseAnimations();
+      }
+    };
+
+    if (reducedMotion) {
+      startCinematicMotion();
+    } else if (coarsePointer) {
+      if (networkField && typeof networkField.pauseAnimations === 'function') {
+        networkField.pauseAnimations();
+      }
+      window.addEventListener('pointerdown', startCinematicMotion, { once: true, passive: true });
+      window.setTimeout(startCinematicMotion, 5000);
+    } else {
+      window.requestAnimationFrame(startCinematicMotion);
+    }
+  }
 
   if (!reducedMotion && finePointer && neuralHero && homeHero) {
     let neuralFrame = 0;
