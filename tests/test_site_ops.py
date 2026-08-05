@@ -83,7 +83,7 @@ class SiteOpsTests(unittest.TestCase):
         source = (root / "index.html").read_text(encoding="utf-8")
         hero = source.split('<section class="hero-section">', 1)[1].split("</section>", 1)[0]
 
-        self.assertIn("Dealer websites built for AI—and for today.", hero)
+        self.assertIn("Dealer websites built for AI and for today.", hero)
         self.assertIn('href="dealer-websites.html"', hero)
         self.assertIn('href="#dealer-growth-stack"', hero)
         self.assertIn("Google · Meta · AI · TikTok", hero)
@@ -99,7 +99,7 @@ class SiteOpsTests(unittest.TestCase):
         stack = source.split('id="dealer-growth-stack"', 1)[1].split("</section>", 1)[0]
 
         for capability in (
-            "Websites Built for AI—and Today",
+            "Websites Built for AI and Today",
             "Inventory Feeds",
             "Google, Meta, ChatGPT &amp; TikTok Ads",
             "SEO",
@@ -112,6 +112,17 @@ class SiteOpsTests(unittest.TestCase):
         self.assertEqual(stack_list.count('<a href="'), 7)
         self.assertIn("Thousands saved every month. Sales increased.", source)
         self.assertIn("Results reported from TeeJay's direct dealership work.", source)
+
+    def test_public_site_copy_contains_no_em_dashes(self):
+        root = Path(__file__).resolve().parents[1]
+        public_suffixes = {".html", ".js", ".md", ".txt"}
+
+        for path in root.rglob("*"):
+            if not path.is_file() or path.suffix not in public_suffixes:
+                continue
+            if ".git" in path.parts or "release-candidates" in path.parts:
+                continue
+            self.assertNotIn("\u2014", path.read_text(encoding="utf-8"), str(path.relative_to(root)))
 
     def test_homepage_preserves_accessibility_and_first_paint_guards(self):
         root = Path(__file__).resolve().parents[1]
