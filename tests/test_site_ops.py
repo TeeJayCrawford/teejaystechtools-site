@@ -83,14 +83,55 @@ class SiteOpsTests(unittest.TestCase):
         source = (root / "index.html").read_text(encoding="utf-8")
         hero = source.split('<section class="hero-section">', 1)[1].split("</section>", 1)[0]
 
-        self.assertIn("Dealer websites and custom tools built for the future.", hero)
+        self.assertIn("Dealer websites built for AI—and for today.", hero)
         self.assertIn('href="dealer-websites.html"', hero)
         self.assertIn('href="#dealer-growth-stack"', hero)
-        self.assertIn("Google Ads", hero)
+        self.assertIn("Google · Meta · AI · TikTok", hero)
         self.assertIn('class="agent-network-hero"', hero)
+        self.assertEqual(hero.count('class="network-agent '), 7)
         self.assertIn("read-only", hero)
         self.assertIn("prepare-only", hero)
         self.assertNotIn('class="ai-audit-promo"', source)
+
+    def test_homepage_presents_complete_dealer_stack_and_attributed_results(self):
+        root = Path(__file__).resolve().parents[1]
+        source = (root / "index.html").read_text(encoding="utf-8")
+        stack = source.split('id="dealer-growth-stack"', 1)[1].split("</section>", 1)[0]
+
+        for capability in (
+            "Websites Built for AI—and Today",
+            "Inventory Feeds",
+            "Google, Meta, ChatGPT &amp; TikTok Ads",
+            "SEO",
+            "Reputation Management",
+            "Inventory Descriptions",
+            "Custom Dealership Reporting Software",
+        ):
+            self.assertIn(capability, stack)
+        stack_list = stack.split('class="homepage-stack-list"', 1)[1].split('class="homepage-stack-actions"', 1)[0]
+        self.assertEqual(stack_list.count('<a href="'), 7)
+        self.assertIn("Thousands saved every month. Sales increased.", source)
+        self.assertIn("Results reported from TeeJay's direct dealership work.", source)
+
+    def test_homepage_preserves_accessibility_and_first_paint_guards(self):
+        root = Path(__file__).resolve().parents[1]
+        source = (root / "index.html").read_text(encoding="utf-8")
+        styles = (root / "styles.css").read_text(encoding="utf-8")
+        runtime = (root / "site.js").read_text(encoding="utf-8")
+
+        self.assertIn('style data-home-critical', source)
+        self.assertIn('rel="stylesheet" href="styles.css?', source)
+        self.assertIn('media="print" onload="this.media=\'all\'"', source)
+        self.assertIn('<noscript><link rel="stylesheet" href="styles.css?', source)
+        self.assertIn('body class="site-home motion-booting"', source)
+        self.assertIn('alt="TeeJay Crawford seated in a race car" loading="lazy" decoding="async"', source)
+        self.assertIn("content-visibility: auto", styles)
+        self.assertIn(".site-footer > p a", styles)
+        self.assertIn("text-decoration: underline", styles)
+        self.assertIn("animation: none", styles)
+        self.assertIn("networkField.pauseAnimations", runtime)
+        self.assertIn("networkField.unpauseAnimations", runtime)
+        self.assertIn("window.setTimeout(startCinematicMotion, 5000)", runtime)
 
     def test_ai_audit_collects_market_query_and_optional_explicit_competitors(self):
         root = Path(__file__).resolve().parents[1]
