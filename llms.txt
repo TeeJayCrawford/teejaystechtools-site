@@ -1,6 +1,6 @@
 # TeeJay's Tech Tools
 
-> AI-ready dealer websites, inventory feeds, Google, Meta, ChatGPT, and TikTok advertising, SEO, reputation management, inventory descriptions, and custom dealership reporting software. TeeJay Crawford is the founder and accountable operator.
+> All-in-one dealer websites connected to live inventory, plus Google Ads for in-stock vehicles and units with plain-English reporting. TeeJay Crawford is the founder and accountable operator.
 
 Important notes:
 
@@ -18,10 +18,10 @@ Site references:
 
 ## Start here
 
-- [Future-ready dealer websites](https://teejaystechtools.com/dealer-websites.html): Flagship inventory-feed website service for powersports, trailer, and independent auto dealers.
+- [All-in-one dealer websites](https://teejaystechtools.com/dealer-websites.html): Inventory-feed websites with search, VDPs, leads, finance, service, SEO, Google Ads landing paths, and support.
 - [Inventory feeds and merchandising](https://teejaystechtools.com/inventory-merchandising.html): Feed health, descriptions, media and option exceptions, and dealer-controlled inventory quality.
-- [Omnichannel ads and marketing measurement](https://teejaystechtools.com/marketing-truth.html): Google, Meta, ChatGPT, and TikTok campaign strategy tied to calls, forms, inventory, analytics, and sales evidence.
-- [Dealership solutions](https://teejaystechtools.com/dealerships.html): Complete dealer website, software, merchandising, reputation, and operating-service stack.
+- [Inventory Google Ads](https://teejaystechtools.com/marketing-truth.html): Google Ads for in-stock inventory with relevant landing pages, shopper-action tracking, and plain-English reporting.
+- [Dealership solutions](https://teejaystechtools.com/dealerships.html): The connected dealer website and inventory Google Ads offer, with supporting inventory and reporting services.
 - [Products](https://teejaystechtools.com/products.html): Current tools and scoped offers.
 - [About TeeJay Crawford](https://teejaystechtools.com/about.html): Founder background and operating approach.
 - [Evidence and release standards](https://teejaystechtools.com/proof.html): How claims, proof, and live states are handled.
@@ -38,7 +38,7 @@ Site references:
 
 - [Inventory Merchandising Guard](https://teejaystechtools.com/inventory-merchandising.html): Guarded listing-quality operations.
 - [Inventory descriptions and merchandising](https://teejaystechtools.com/inventory-descriptions.html): VIN-matched, evidence-backed vehicle descriptions and dealer-controlled review.
-- [Google Ads and marketing measurement](https://teejaystechtools.com/marketing-truth.html): Campaign and shopper-signal measurement.
+- [Inventory Google Ads and reporting](https://teejaystechtools.com/marketing-truth.html): In-stock campaigns, useful landing pages, shopper-action tracking, and clear next steps.
 - [DealerLister Facebook inventory plugin](https://teejaystechtools.com/autolister.html): Human-reviewed Marketplace listing preparation from authorized dealer inventory.
 - [Reputation management](https://teejaystechtools.com/reputation-visibility.html): Exact-location review, response, listing-consistency, escalation, and public-state operations.
 - [Custom dealer software](https://teejaystechtools.com/custom-dealer-software.html): Inventory applications, integrations, dashboards, workflow automation, and governed agents built around dealer operations.

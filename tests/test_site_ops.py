@@ -78,19 +78,20 @@ class SiteOpsTests(unittest.TestCase):
         ):
             self.assertTrue((root / "assets" / asset).exists(), asset)
 
-    def test_homepage_leads_with_dealer_websites_and_preserves_agent_network(self):
+    def test_homepage_leads_with_all_in_one_websites_and_inventory_google_ads(self):
         root = Path(__file__).resolve().parents[1]
         source = (root / "index.html").read_text(encoding="utf-8")
         hero = source.split('<section class="hero-section">', 1)[1].split("</section>", 1)[0]
 
-        self.assertIn("Dealer websites built for AI and for today.", hero)
+        self.assertIn("All-in-one dealer websites. Google Ads made simple.", hero)
         self.assertIn('href="dealer-websites.html"', hero)
-        self.assertIn('href="#dealer-growth-stack"', hero)
-        self.assertIn("Google · Meta · AI · TikTok", hero)
+        self.assertIn('href="marketing-truth.html"', hero)
+        self.assertIn("Promote what is in stock", hero)
         self.assertIn('class="agent-network-hero"', hero)
         self.assertEqual(hero.count('class="network-agent '), 7)
-        self.assertIn("read-only", hero)
-        self.assertIn("prepare-only", hero)
+        self.assertIn("plain English", hero)
+        self.assertNotIn("prepare-only", hero)
+        self.assertNotIn("read-only", hero)
         self.assertNotIn('class="ai-audit-promo"', source)
 
     def test_homepage_presents_complete_dealer_stack_and_attributed_results(self):
@@ -99,13 +100,13 @@ class SiteOpsTests(unittest.TestCase):
         stack = source.split('id="dealer-growth-stack"', 1)[1].split("</section>", 1)[0]
 
         for capability in (
-            "Websites Built for AI and Today",
-            "Inventory Feeds",
-            "Google, Meta, ChatGPT &amp; TikTok Ads",
-            "SEO",
-            "Reputation Management",
-            "Inventory Descriptions",
-            "Custom Dealership Reporting Software",
+            "All-in-One Dealer Website",
+            "Live Inventory Foundation",
+            "Google Ads for In-Stock Inventory",
+            "Search &amp; Local Discovery",
+            "Useful Inventory Merchandising",
+            "Calls, Forms &amp; Clear Reporting",
+            "Ongoing Dealer Improvements",
         ):
             self.assertIn(capability, stack)
         stack_list = stack.split('class="homepage-stack-list"', 1)[1].split('class="homepage-stack-actions"', 1)[0]
