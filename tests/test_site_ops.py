@@ -136,6 +136,8 @@ class SiteOpsTests(unittest.TestCase):
             self.assertIn(name, proof)
             self.assertIn(url, proof)
         self.assertEqual(proof.count("LIVE SITE"), 3)
+        self.assertIn("SELECTED LIVE DEALERSHIP WORK", proof)
+        self.assertNotIn("Three live builds", proof)
         self.assertIn("Map my dealership plan", proof)
         self.assertIn('href="#website-packages"', proof)
 
