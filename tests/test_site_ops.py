@@ -111,8 +111,14 @@ class SiteOpsTests(unittest.TestCase):
             self.assertIn(capability, stack)
         stack_list = stack.split('class="homepage-stack-list"', 1)[1].split('class="homepage-stack-actions"', 1)[0]
         self.assertEqual(stack_list.count('<a href="'), 7)
-        self.assertIn("Thousands saved every month. Sales increased.", source)
-        self.assertIn("Results reported from TeeJay's direct dealership work.", source)
+        self.assertIn("Born in franchise dealerships. Built and priced for independents.", source)
+        self.assertIn("Every build is scoped to the dealer's inventory, sources, market, and implementation priorities.", source)
+        self.assertIn('"@type": "Organization"', source)
+        self.assertNotIn('"@type": "ProfessionalService"', source)
+        self.assertEqual(source.count("Request this plan"), 3)
+        self.assertIn("utm_content=foundation", source)
+        self.assertIn("utm_content=inventory-engine", source)
+        self.assertIn("utm_content=dealer-growth-stack", source)
 
     def test_public_site_copy_contains_no_em_dashes(self):
         root = Path(__file__).resolve().parents[1]
