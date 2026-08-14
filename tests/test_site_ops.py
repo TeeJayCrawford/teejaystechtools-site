@@ -138,6 +138,10 @@ class SiteOpsTests(unittest.TestCase):
         self.assertEqual(proof.count("LIVE SITE"), 3)
         self.assertIn("SELECTED LIVE DEALERSHIP WORK", proof)
         self.assertNotIn("Three live builds", proof)
+        self.assertIn("pettus-trailers-clean-720.webp", proof)
+        self.assertIn("apg-customs-clean-540.webp", proof)
+        self.assertNotIn("trailer-storefront-preview", proof)
+        self.assertNotIn("custom-vehicle-preview", proof)
         self.assertIn("Map my dealership plan", proof)
         self.assertIn('href="#website-packages"', proof)
 
