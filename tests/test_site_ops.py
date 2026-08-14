@@ -111,7 +111,7 @@ class SiteOpsTests(unittest.TestCase):
             self.assertIn(capability, stack)
         stack_list = stack.split('class="homepage-stack-list"', 1)[1].split('class="homepage-stack-actions"', 1)[0]
         self.assertEqual(stack_list.count('<a href="'), 7)
-        self.assertIn("Born in franchise dealerships. Built and priced for independents.", source)
+        self.assertIn("Born in a franchise store. Built for independents.", source)
         self.assertIn("Every build is scoped to the dealer's inventory, sources, market, and implementation priorities.", source)
         self.assertIn('"@type": "Organization"', source)
         self.assertNotIn('"@type": "ProfessionalService"', source)
@@ -119,6 +119,25 @@ class SiteOpsTests(unittest.TestCase):
         self.assertIn("utm_content=foundation", source)
         self.assertIn("utm_content=inventory-engine", source)
         self.assertIn("utm_content=dealer-growth-stack", source)
+
+    def test_homepage_places_named_live_dealership_proof_before_packages(self):
+        root = Path(__file__).resolve().parents[1]
+        source = (root / "index.html").read_text(encoding="utf-8")
+        proof_start = source.index('class="homepage-websites live-builds"')
+        packages_start = source.index('id="website-packages"')
+
+        self.assertLess(proof_start, packages_start)
+        proof = source[proof_start:packages_start]
+        for name, url in (
+            ("Get More For Your Trade", "https://getmoreforyourtrade.com/"),
+            ("Pettus Trailers", "https://www.pettustrailers.com/"),
+            ("APG Customs", "https://apgcustoms.com/"),
+        ):
+            self.assertIn(name, proof)
+            self.assertIn(url, proof)
+        self.assertEqual(proof.count("LIVE SITE"), 3)
+        self.assertIn("Map my dealership plan", proof)
+        self.assertIn('href="#website-packages"', proof)
 
     def test_public_site_copy_contains_no_em_dashes(self):
         root = Path(__file__).resolve().parents[1]
