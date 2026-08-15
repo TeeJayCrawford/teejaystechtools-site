@@ -72,7 +72,7 @@
     '.proof-ledger > article',
     '.agent-map > article'
   ].join(','))).filter(function (node) {
-    return !node.matches('main > section:first-child');
+    return !node.matches('main > section:first-child, .contact-section');
   });
 
   if (!reducedMotion && revealTargets.length > 0) {
