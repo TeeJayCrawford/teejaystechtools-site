@@ -78,14 +78,15 @@ class SiteOpsTests(unittest.TestCase):
         ):
             self.assertTrue((root / "assets" / asset).exists(), asset)
 
-    def test_homepage_leads_with_all_in_one_websites_and_inventory_google_ads(self):
+    def test_homepage_leads_with_inventory_first_websites_and_google_ads(self):
         root = Path(__file__).resolve().parents[1]
         source = (root / "index.html").read_text(encoding="utf-8")
         hero = source.split('<section class="hero-section">', 1)[1].split("</section>", 1)[0]
 
-        self.assertIn("All-in-one dealer websites. Google Ads made simple.", hero)
-        self.assertIn('href="dealer-websites.html"', hero)
-        self.assertIn('href="marketing-truth.html"', hero)
+        self.assertIn("Dealer websites built around your inventory. Google Ads built to sell it.", hero)
+        self.assertIn('href="contact.html?service=marketing-spend-truth-pack"', hero)
+        self.assertIn("Talk with TeeJay", hero)
+        self.assertEqual(hero.count('class="button '), 1)
         self.assertIn("Promote what is in stock", hero)
         self.assertIn('class="agent-network-hero"', hero)
         self.assertEqual(hero.count('class="network-agent '), 7)
