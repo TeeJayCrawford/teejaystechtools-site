@@ -7370,6 +7370,22 @@ h3 {
 }
 
 @media (max-width: 480px) {
+  .contact-hero {
+    padding: 56px 0 44px;
+  }
+
+  .contact-hero h1 {
+    margin-bottom: 20px;
+  }
+
+  .contact-hero p {
+    margin-bottom: 0;
+  }
+
+  .contact-section {
+    padding: 52px 0 72px;
+  }
+
   .software-demo-body > ol { grid-template-columns: 1fr; }
   .software-demo-form { padding: 20px; }
   .price-band { padding: 26px 20px; }
