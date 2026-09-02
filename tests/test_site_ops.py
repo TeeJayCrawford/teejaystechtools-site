@@ -84,6 +84,8 @@ class SiteOpsTests(unittest.TestCase):
         hero = source.split('<section class="hero-section">', 1)[1].split("</section>", 1)[0]
 
         self.assertIn("Dealer websites built for the whole operation.", hero)
+        self.assertIn("More than 20 years of dealership expertise", hero)
+        self.assertNotIn("Four live builds now prove it", hero)
         self.assertIn('href="contact.html?service=feed-backed-dealer-website"', hero)
         self.assertIn("Talk with TeeJay", hero)
         self.assertEqual(hero.count('class="button '), 1)
@@ -96,6 +98,19 @@ class SiteOpsTests(unittest.TestCase):
         self.assertNotIn("prepare-only", hero)
         self.assertNotIn("read-only", hero)
         self.assertNotIn('class="ai-audit-promo"', source)
+
+    def test_site_leads_with_long_earned_and_current_dealership_expertise(self):
+        root = Path(__file__).resolve().parents[1]
+        homepage = (root / "index.html").read_text(encoding="utf-8")
+        about = (root / "about.html").read_text(encoding="utf-8")
+
+        self.assertIn("20+ years of dealership expertise", homepage)
+        self.assertIn("Deep dealership expertise, applied to today's technology.", homepage)
+        self.assertIn("comes from more than 20 years inside the business", homepage)
+        self.assertNotIn("The proof is already live.", homepage)
+        self.assertNotIn("Four live website builds", homepage)
+        self.assertIn("more than 20 years of hands-on dealership expertise", about)
+        self.assertIn("he works on today", about)
 
     def test_homepage_presents_complete_dealer_stack_and_attributed_results(self):
         root = Path(__file__).resolve().parents[1]
