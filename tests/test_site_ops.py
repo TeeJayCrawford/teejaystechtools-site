@@ -240,6 +240,7 @@ class SiteOpsTests(unittest.TestCase):
     def test_live_site_previews_use_current_uncropped_viewports(self):
         root = Path(__file__).resolve().parents[1]
         work = (root / "work.html").read_text(encoding="utf-8")
+        dealer_websites = (root / "dealer-websites.html").read_text(encoding="utf-8")
         styles = (root / "styles.css").read_text(encoding="utf-8")
 
         for dimensions in (
@@ -251,7 +252,12 @@ class SiteOpsTests(unittest.TestCase):
             self.assertIn(dimensions, work)
 
         self.assertIn("Welcome to Pettus headline", work)
-        self.assertIn("One More Local Look headline", work)
+        self.assertIn('getmore-home.png" width="1440" height="898"', work)
+        self.assertIn("What If Your Car Is Worth More Here headline", work)
+        self.assertIn(
+            '<picture class="proof-browser-picture"><img src="assets/dealer-websites/getmore-home.png"',
+            dealer_websites,
+        )
         self.assertNotIn("campaign art", work)
         self.assertNotIn("Sell it. Trade it. Get more.", work)
 
