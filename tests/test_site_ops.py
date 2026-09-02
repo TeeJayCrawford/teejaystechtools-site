@@ -78,15 +78,15 @@ class SiteOpsTests(unittest.TestCase):
         ):
             self.assertTrue((root / "assets" / asset).exists(), asset)
 
-    def test_homepage_leads_with_live_dealer_websites_and_operating_depth(self):
+    def test_homepage_leads_with_a_clear_business_promise(self):
         root = Path(__file__).resolve().parents[1]
         source = (root / "index.html").read_text(encoding="utf-8")
         hero = source.split('<section class="hero-section">', 1)[1].split("</section>", 1)[0]
 
-        self.assertIn("Dealer websites built for the whole operation.", hero)
-        self.assertIn("More than 20 years of dealership expertise", hero)
+        self.assertIn("Built for the way your business works.", hero)
+        self.assertIn("20+ YEARS INSIDE AUTOMOTIVE RETAIL", hero)
         self.assertNotIn("Four live builds now prove it", hero)
-        self.assertIn('href="contact.html?service=feed-backed-dealer-website"', hero)
+        self.assertIn('href="contact.html?service=not-sure"', hero)
         self.assertIn("Talk with TeeJay", hero)
         self.assertEqual(hero.count('class="button '), 1)
         self.assertIn("Lead Delivery", hero)
@@ -104,9 +104,9 @@ class SiteOpsTests(unittest.TestCase):
         homepage = (root / "index.html").read_text(encoding="utf-8")
         about = (root / "about.html").read_text(encoding="utf-8")
 
-        self.assertIn("20+ years of dealership expertise", homepage)
-        self.assertIn("Deep dealership expertise, applied to today's technology.", homepage)
-        self.assertIn("comes from more than 20 years inside the business", homepage)
+        self.assertIn("20+ YEARS INSIDE AUTOMOTIVE RETAIL", homepage)
+        self.assertIn("EXPERIENCE YOU CAN USE TODAY", homepage)
+        self.assertIn("More than 20 years inside automotive retail", homepage)
         self.assertNotIn("The proof is already live.", homepage)
         self.assertNotIn("Four live website builds", homepage)
         self.assertIn("more than 20 years of hands-on dealership expertise", about)
@@ -118,14 +118,15 @@ class SiteOpsTests(unittest.TestCase):
         work = (root / "work.html").read_text(encoding="utf-8")
         legacy = (root / "proof.html").read_text(encoding="utf-8")
 
-        self.assertIn("Built for businesses that have work to do.", work)
-        self.assertIn("More than 20 years of dealership and business experience", work)
+        self.assertIn("Websites built for the business behind them.", work)
+        self.assertIn("you can visit every one of them live", work)
         self.assertIn("Flagship website builds", work)
         self.assertIn("The website is only one part of the operation.", work)
         self.assertNotIn("Proof Standard", work)
         self.assertNotIn("The evidence standard", work)
-        self.assertIn("Built from the dealership outward.", homepage)
-        self.assertIn("Explore selected work", homepage)
+        self.assertIn("SELECTED LIVE WORK", homepage)
+        self.assertIn("See all work", homepage)
+        self.assertNotIn('class="proof-section"', homepage)
 
         for page in root.rglob("*.html"):
             if page.name == "proof.html":
@@ -184,58 +185,45 @@ class SiteOpsTests(unittest.TestCase):
         self.assertIn("custom trucks, Jeeps, Broncos, recent builds", apg)
         self.assertIn("start-your-build inquiry", apg)
 
-    def test_homepage_presents_complete_dealer_stack_and_attributed_results(self):
+    def test_homepage_presents_two_audiences_and_one_simple_process(self):
         root = Path(__file__).resolve().parents[1]
         source = (root / "index.html").read_text(encoding="utf-8")
-        stack = source.split('id="dealer-growth-stack"', 1)[1].split("</section>", 1)[0]
-
-        for capability in (
-            "All-in-One Dealer Website",
-            "Live Inventory Foundation",
-            "Store &amp; Department Routing",
-            "Search &amp; Local Discovery",
-            "Useful Inventory Merchandising",
-            "Calls, Forms &amp; Clear Reporting",
-            "Ongoing Dealer Improvements",
-        ):
-            self.assertIn(capability, stack)
-        stack_list = stack.split('class="homepage-stack-list"', 1)[1].split('class="homepage-stack-actions"', 1)[0]
-        self.assertEqual(stack_list.count('<a href="'), 7)
-        self.assertIn("Born in a franchise store. Built for independents.", source)
-        self.assertIn("Every build is scoped to the dealer's inventory, sources, market, and implementation priorities.", source)
+        self.assertIn("Two lanes. One practical approach.", source)
+        self.assertIn('href="dealerships.html"', source)
+        self.assertIn('href="small-business.html"', source)
+        self.assertEqual(source.count('class="clarity-audience-card"'), 2)
+        self.assertEqual(source.count('class="clarity-process"'), 1)
+        for step in ("Start with the real problem", "Map the operation", "Build, launch, improve"):
+            self.assertIn(step, source)
+        self.assertNotIn('id="dealer-growth-stack"', source)
+        self.assertNotIn('id="website-packages"', source)
+        self.assertNotIn('class="proof-section"', source)
         self.assertIn('"@type": "Organization"', source)
         self.assertNotIn('"@type": "ProfessionalService"', source)
-        self.assertEqual(source.count("Request this plan"), 3)
-        self.assertIn("utm_content=foundation", source)
-        self.assertIn("utm_content=inventory-engine", source)
-        self.assertIn("utm_content=dealer-growth-stack", source)
+        self.assertEqual(source.count("Talk with TeeJay"), 5)
 
-    def test_homepage_places_named_live_dealership_proof_before_packages(self):
+    def test_homepage_shows_four_uncropped_live_sites_without_a_proof_section(self):
         root = Path(__file__).resolve().parents[1]
         source = (root / "index.html").read_text(encoding="utf-8")
-        proof_start = source.index('class="homepage-websites live-builds"')
-        packages_start = source.index('id="website-packages"')
-
-        self.assertLess(proof_start, packages_start)
-        proof = source[proof_start:packages_start]
+        work_start = source.index('class="clarity-work"')
+        work_end = source.index('class="clarity-expertise"')
+        selected_work = source[work_start:work_end]
         for name, url in (
             ("Pettus Automotive", "https://pettusauto.com/"),
             ("Get More For Your Trade", "https://getmoreforyourtrade.com/"),
             ("Pettus Trailers", "https://www.pettustrailers.com/"),
             ("APG Customs", "https://apgcustoms.com/"),
         ):
-            self.assertIn(name, proof)
-            self.assertIn(url, proof)
-        self.assertEqual(proof.count("LIVE SITE"), 4)
-        self.assertIn("SELECTED LIVE DEALERSHIP WORK", proof)
-        self.assertNotIn("Three live builds", proof)
-        self.assertIn("pettus-trailers-clean-720.webp", proof)
-        self.assertIn("apg-customs-clean-540.webp", proof)
-        self.assertIn("pettus-automotive-live-720.jpg", proof)
-        self.assertNotIn("trailer-storefront-preview", proof)
-        self.assertNotIn("custom-vehicle-preview", proof)
-        self.assertIn("Map my dealership plan", proof)
-        self.assertIn('href="#website-packages"', proof)
+            self.assertIn(name, selected_work)
+            self.assertIn(url, selected_work)
+        self.assertEqual(selected_work.count('class="clarity-work-card"'), 4)
+        self.assertEqual(selected_work.count("Live website</span>"), 4)
+        self.assertIn("SELECTED LIVE WORK", selected_work)
+        self.assertIn("pettus-trailers-clean-720.webp", selected_work)
+        self.assertIn("apg-customs-clean-540.webp", selected_work)
+        self.assertIn("pettus-automotive-live-720.jpg", selected_work)
+        self.assertIn('getmore-home.png" width="1440" height="898"', selected_work)
+        self.assertNotIn('class="proof-section"', source)
 
     def test_live_site_previews_use_current_uncropped_viewports(self):
         root = Path(__file__).resolve().parents[1]

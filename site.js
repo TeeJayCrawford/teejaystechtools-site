@@ -9,6 +9,51 @@
   const header = document.querySelector('[data-site-header]');
   const menuButton = document.querySelector('.menu-button');
   const nav = document.querySelector('.primary-nav');
+  const rootPrefix = '/';
+  const currentPath = window.location.pathname;
+
+  function isCurrentSection(label) {
+    if (label === 'Work') return /\/work(?:\.html|\/)/.test(currentPath);
+    if (label === 'Small Business') return /\/small-business\.html$/.test(currentPath);
+    if (label === 'About') return /\/about\.html$/.test(currentPath);
+    if (label === 'Dealerships') {
+      return /\/(dealerships|dealer-websites|inventory-|custom-dealer|dealer-command|autolister|reputation-|marketing-truth)/.test(currentPath);
+    }
+    return false;
+  }
+
+  if (nav) {
+    const primaryLinks = [
+      ['Dealerships', 'dealerships.html'],
+      ['Small Business', 'small-business.html'],
+      ['Work', 'work.html'],
+      ['About', 'about.html']
+    ];
+    nav.innerHTML = primaryLinks.map(function (item) {
+      const current = isCurrentSection(item[0]) ? ' aria-current="page"' : '';
+      return '<a' + current + ' href="' + rootPrefix + item[1] + '">' + item[0] + '</a>';
+    }).join('') + '<a class="mobile-nav-contact" href="' + rootPrefix + 'contact.html?service=not-sure">Talk with TeeJay</a>';
+  }
+
+  const headerCta = document.querySelector('.nav-cta');
+  if (headerCta) {
+    headerCta.href = rootPrefix + 'contact.html?service=not-sure';
+    headerCta.textContent = 'Talk with TeeJay';
+  }
+
+  const footerLinks = document.querySelector('.footer-links');
+  if (footerLinks) {
+    footerLinks.innerHTML = [
+      ['Dealerships', 'dealerships.html'],
+      ['Small Business', 'small-business.html'],
+      ['Work', 'work.html'],
+      ['About', 'about.html'],
+      ['Talk with TeeJay', 'contact.html?service=not-sure'],
+      ['Privacy', 'privacy.html']
+    ].map(function (item) {
+      return '<a href="' + rootPrefix + item[1] + '">' + item[0] + '</a>';
+    }).join('');
+  }
 
   if (menuButton && nav) {
     const menuLabel = menuButton.querySelector('[data-menu-label]');
@@ -26,6 +71,7 @@
 
     function setMenuState(open) {
       nav.classList.toggle('is-open', open);
+      document.documentElement.classList.toggle('nav-open', open);
       menuButton.setAttribute('aria-expanded', String(open));
       menuButton.setAttribute('aria-label', open ? 'Close navigation menu' : 'Open navigation menu');
       updateMenuLabel(open ? 'Close' : 'Menu');
@@ -63,7 +109,6 @@
 
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const revealTargets = Array.from(document.querySelectorAll([
-    'main > section',
     '.catalog-row',
     '.lane-list > article',
     '.principle-list > article',
@@ -72,7 +117,7 @@
     '.proof-ledger > article',
     '.agent-map > article'
   ].join(','))).filter(function (node) {
-    return !node.matches('main > section:first-child, .contact-section');
+    return !node.matches('.contact-section');
   });
 
   if (!reducedMotion && revealTargets.length > 0) {
