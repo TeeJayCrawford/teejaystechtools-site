@@ -237,6 +237,35 @@ class SiteOpsTests(unittest.TestCase):
         self.assertIn("Map my dealership plan", proof)
         self.assertIn('href="#website-packages"', proof)
 
+    def test_live_site_previews_use_current_uncropped_viewports(self):
+        root = Path(__file__).resolve().parents[1]
+        work = (root / "work.html").read_text(encoding="utf-8")
+        styles = (root / "styles.css").read_text(encoding="utf-8")
+
+        for dimensions in (
+            'width="1200" height="675"',
+            'width="1280" height="720"',
+            'width="1440" height="810"',
+            'width="1080" height="608"',
+        ):
+            self.assertIn(dimensions, work)
+
+        self.assertIn("Welcome to Pettus headline", work)
+        self.assertIn("One More Local Look headline", work)
+        self.assertNotIn("campaign art", work)
+        self.assertNotIn("Sell it. Trade it. Get more.", work)
+
+        portfolio_rule = styles[
+            styles.index(".portfolio-project-media picture img") :
+            styles.index(".portfolio-project-media figcaption")
+        ]
+        case_rule = styles[
+            styles.index(".case-hero-media img") :
+            styles.index(".case-hero-media figcaption")
+        ]
+        self.assertIn("object-fit: contain", portfolio_rule)
+        self.assertIn("object-fit: contain", case_rule)
+
     def test_core_website_pages_do_not_claim_built_in_google_ads(self):
         root = Path(__file__).resolve().parents[1]
 

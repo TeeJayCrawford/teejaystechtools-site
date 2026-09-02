@@ -6483,8 +6483,8 @@ h3 {
 .live-build-card:not(.live-build-card-featured) .live-build-media { border-right: 1px solid rgba(117, 164, 230, 0.24); }
 .live-build-media .browser-frame { height: 100%; border: 0; border-radius: 0; box-shadow: none; }
 .live-build-media .proof-browser-picture { height: calc(100% - 30px); aspect-ratio: auto; }
-.live-build-media .proof-browser-picture img { object-fit: cover; object-position: center top; transition: transform 520ms cubic-bezier(0.22, 1, 0.36, 1); }
-.live-build-card-featured .live-build-media .proof-browser-picture { aspect-ratio: 1440 / 898; }
+.live-build-media .proof-browser-picture img { object-fit: contain; object-position: center top; transition: transform 520ms cubic-bezier(0.22, 1, 0.36, 1); }
+.live-build-card-featured .live-build-media .proof-browser-picture { aspect-ratio: 16 / 9; }
 .live-build-card-featured .live-build-media .proof-browser-picture img { object-fit: contain; }
 .live-build-card:hover .live-build-media img { transform: scale(1.018); }
 
@@ -7613,7 +7613,7 @@ h3 {
 .portfolio-project-media picture img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center top;
 }
 
@@ -7893,7 +7893,7 @@ h3 {
 .case-hero-media img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center top;
 }
 
