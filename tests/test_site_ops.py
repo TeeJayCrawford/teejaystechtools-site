@@ -241,7 +241,7 @@ class SiteOpsTests(unittest.TestCase):
         ):
             self.assertIn(dimensions, work)
 
-        self.assertIn("Welcome to Pettus headline", work)
+        self.assertIn("direct inventory search and fresh vehicle arrivals", work)
         self.assertIn('getmore-home.png" width="1440" height="898"', work)
         self.assertIn("What If Your Car Is Worth More Here headline", work)
         self.assertIn(
