@@ -78,16 +78,18 @@ class SiteOpsTests(unittest.TestCase):
         ):
             self.assertTrue((root / "assets" / asset).exists(), asset)
 
-    def test_homepage_leads_with_inventory_first_websites_and_google_ads(self):
+    def test_homepage_leads_with_live_dealer_websites_and_operating_depth(self):
         root = Path(__file__).resolve().parents[1]
         source = (root / "index.html").read_text(encoding="utf-8")
         hero = source.split('<section class="hero-section">', 1)[1].split("</section>", 1)[0]
 
-        self.assertIn("Dealer websites built around your inventory. Google Ads built to sell it.", hero)
-        self.assertIn('href="contact.html?service=marketing-spend-truth-pack"', hero)
+        self.assertIn("Dealer websites built for the whole operation.", hero)
+        self.assertIn('href="contact.html?service=feed-backed-dealer-website"', hero)
         self.assertIn("Talk with TeeJay", hero)
         self.assertEqual(hero.count('class="button '), 1)
-        self.assertIn("Promote what is in stock", hero)
+        self.assertIn("Lead Delivery", hero)
+        self.assertIn("Route every shopper inquiry", hero)
+        self.assertNotIn("Google Ads", hero)
         self.assertIn('class="agent-network-hero"', hero)
         self.assertEqual(hero.count('class="network-agent '), 7)
         self.assertIn("plain English", hero)
@@ -103,7 +105,7 @@ class SiteOpsTests(unittest.TestCase):
         for capability in (
             "All-in-One Dealer Website",
             "Live Inventory Foundation",
-            "Google Ads for In-Stock Inventory",
+            "Store &amp; Department Routing",
             "Search &amp; Local Discovery",
             "Useful Inventory Merchandising",
             "Calls, Forms &amp; Clear Reporting",
@@ -130,21 +132,36 @@ class SiteOpsTests(unittest.TestCase):
         self.assertLess(proof_start, packages_start)
         proof = source[proof_start:packages_start]
         for name, url in (
+            ("Pettus Automotive", "https://pettusauto.com/"),
             ("Get More For Your Trade", "https://getmoreforyourtrade.com/"),
             ("Pettus Trailers", "https://www.pettustrailers.com/"),
             ("APG Customs", "https://apgcustoms.com/"),
         ):
             self.assertIn(name, proof)
             self.assertIn(url, proof)
-        self.assertEqual(proof.count("LIVE SITE"), 3)
+        self.assertEqual(proof.count("LIVE SITE"), 4)
         self.assertIn("SELECTED LIVE DEALERSHIP WORK", proof)
         self.assertNotIn("Three live builds", proof)
         self.assertIn("pettus-trailers-clean-720.webp", proof)
         self.assertIn("apg-customs-clean-540.webp", proof)
+        self.assertIn("pettus-automotive-live-720.jpg", proof)
         self.assertNotIn("trailer-storefront-preview", proof)
         self.assertNotIn("custom-vehicle-preview", proof)
         self.assertIn("Map my dealership plan", proof)
         self.assertIn('href="#website-packages"', proof)
+
+    def test_core_website_pages_do_not_claim_built_in_google_ads(self):
+        root = Path(__file__).resolve().parents[1]
+
+        for page_name in (
+            "index.html",
+            "dealer-websites.html",
+            "dealerships.html",
+            "products.html",
+            "services.html",
+        ):
+            source = (root / page_name).read_text(encoding="utf-8")
+            self.assertNotIn("Google Ads", source, page_name)
 
     def test_public_site_copy_contains_no_em_dashes(self):
         root = Path(__file__).resolve().parents[1]
