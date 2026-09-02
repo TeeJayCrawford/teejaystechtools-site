@@ -118,10 +118,10 @@ class SiteOpsTests(unittest.TestCase):
         work = (root / "work.html").read_text(encoding="utf-8")
         legacy = (root / "proof.html").read_text(encoding="utf-8")
 
-        self.assertIn("Dealership work built from experience.", work)
-        self.assertIn("more than 20 years of dealership judgment", work)
-        self.assertIn("Selected live work", work)
-        self.assertIn("Clear sources. Clear scope. Clear status.", work)
+        self.assertIn("Built for businesses that have work to do.", work)
+        self.assertIn("More than 20 years of dealership and business experience", work)
+        self.assertIn("Flagship website builds", work)
+        self.assertIn("The website is only one part of the operation.", work)
         self.assertNotIn("Proof Standard", work)
         self.assertNotIn("The evidence standard", work)
         self.assertIn("Built from the dealership outward.", homepage)
@@ -137,6 +137,52 @@ class SiteOpsTests(unittest.TestCase):
         self.assertIn('name="robots" content="noindex,follow"', legacy)
         self.assertIn('http-equiv="refresh" content="0; url=work.html"', legacy)
         self.assertIn('rel="canonical" href="https://teejaystechtools.com/work.html"', legacy)
+
+    def test_work_hub_features_six_live_sites_and_separate_business_systems(self):
+        root = Path(__file__).resolve().parents[1]
+        work = (root / "work.html").read_text(encoding="utf-8")
+
+        projects = (
+            ("Pettus Automotive", "https://pettusauto.com/", "work/pettus-automotive.html"),
+            ("Curtis Glass Center", "https://parkhillsautoglass.com/", "work/curtis-glass-center.html"),
+            ("Talley Tint and Customs", "https://www.talleytintandcustoms.com/", "work/talley-tint-customs.html"),
+            ("Get More For Your Trade", "https://getmoreforyourtrade.com/", "work/get-more-for-your-trade.html"),
+            ("Pettus Trailers", "https://www.pettustrailers.com/", "work/pettus-trailers.html"),
+            ("APG Customs", "https://apgcustoms.com/", "work/apg-customs.html"),
+        )
+
+        self.assertEqual(work.count('<article class="portfolio-project'), 6)
+        self.assertEqual(work.count("Live website</span>"), 6)
+        for name, public_url, case_path in projects:
+            self.assertIn(name, work)
+            self.assertIn(public_url, work)
+            self.assertIn(f'href="{case_path}"', work)
+            case = (root / case_path).read_text(encoding="utf-8")
+            self.assertIn(name, case)
+            self.assertIn(public_url, case)
+            self.assertIn('href="../work.html"', case)
+
+        for capability in (
+            "Inventory feeds &amp; merchandising",
+            "Google Ads &amp; campaign operations",
+            "Custom dealer software",
+            "Dealer Command System",
+            "DealerLister &amp; AutoLister",
+            "Reputation &amp; local visibility",
+        ):
+            self.assertIn(capability, work)
+
+        self.assertIn("Google Ads is scoped separately from the website platform", work)
+        self.assertNotIn("built-in Google Ads", work)
+
+        trailers = (root / "work" / "pettus-trailers.html").read_text(encoding="utf-8")
+        self.assertIn("Complete digital operation", trailers)
+        self.assertIn("Inventory feed sent to Google", trailers)
+        self.assertIn("processing and ad delivery checked separately", trailers)
+
+        apg = (root / "work" / "apg-customs.html").read_text(encoding="utf-8")
+        self.assertIn("custom trucks, Jeeps, Broncos, recent builds", apg)
+        self.assertIn("start-your-build inquiry", apg)
 
     def test_homepage_presents_complete_dealer_stack_and_attributed_results(self):
         root = Path(__file__).resolve().parents[1]
