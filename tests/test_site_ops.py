@@ -112,6 +112,32 @@ class SiteOpsTests(unittest.TestCase):
         self.assertIn("more than 20 years of hands-on dealership expertise", about)
         self.assertIn("he works on today", about)
 
+    def test_site_presents_selected_work_without_proof_page_positioning(self):
+        root = Path(__file__).resolve().parents[1]
+        homepage = (root / "index.html").read_text(encoding="utf-8")
+        work = (root / "work.html").read_text(encoding="utf-8")
+        legacy = (root / "proof.html").read_text(encoding="utf-8")
+
+        self.assertIn("Dealership work built from experience.", work)
+        self.assertIn("more than 20 years of dealership judgment", work)
+        self.assertIn("Selected live work", work)
+        self.assertIn("Clear sources. Clear scope. Clear status.", work)
+        self.assertNotIn("Proof Standard", work)
+        self.assertNotIn("The evidence standard", work)
+        self.assertIn("Built from the dealership outward.", homepage)
+        self.assertIn("Explore selected work", homepage)
+
+        for page in root.rglob("*.html"):
+            if page.name == "proof.html":
+                continue
+            source = page.read_text(encoding="utf-8")
+            self.assertNotIn('href="proof.html"', source, page)
+            self.assertNotIn(">Proof</a>", source, page)
+
+        self.assertIn('name="robots" content="noindex,follow"', legacy)
+        self.assertIn('http-equiv="refresh" content="0; url=work.html"', legacy)
+        self.assertIn('rel="canonical" href="https://teejaystechtools.com/work.html"', legacy)
+
     def test_homepage_presents_complete_dealer_stack_and_attributed_results(self):
         root = Path(__file__).resolve().parents[1]
         source = (root / "index.html").read_text(encoding="utf-8")

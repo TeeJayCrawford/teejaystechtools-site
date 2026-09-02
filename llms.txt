@@ -24,7 +24,7 @@ Site references:
 - [Dealership solutions](https://teejaystechtools.com/dealerships.html): The connected dealer website system, with inventory, shopper paths, lead routing, SEO, privacy, reporting, and custom software.
 - [Products](https://teejaystechtools.com/products.html): Current tools and scoped offers.
 - [About TeeJay Crawford](https://teejaystechtools.com/about.html): Founder background and operating approach.
-- [Evidence and release standards](https://teejaystechtools.com/proof.html): How claims, proof, and live states are handled.
+- [Selected work and operating standards](https://teejaystechtools.com/work.html): Live websites, dealership capabilities, and how project states are handled.
 
 ## Small-business services
 
