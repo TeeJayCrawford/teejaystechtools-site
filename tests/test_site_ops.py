@@ -84,7 +84,7 @@ class SiteOpsTests(unittest.TestCase):
         hero = source.split('<section class="hero-section">', 1)[1].split("</section>", 1)[0]
 
         self.assertIn("Built for the way your business works.", hero)
-        self.assertIn("20+ YEARS INSIDE AUTOMOTIVE RETAIL", hero)
+        self.assertIn("20+ YEARS HELPING SMALL BUSINESSES", hero)
         self.assertNotIn("Four live builds now prove it", hero)
         self.assertIn('href="contact.html?service=not-sure"', hero)
         self.assertIn("Talk with TeeJay", hero)
@@ -99,17 +99,19 @@ class SiteOpsTests(unittest.TestCase):
         self.assertNotIn("read-only", hero)
         self.assertNotIn('class="ai-audit-promo"', source)
 
-    def test_site_leads_with_long_earned_and_current_dealership_expertise(self):
+    def test_site_leads_with_small_business_experience_and_automotive_depth(self):
         root = Path(__file__).resolve().parents[1]
         homepage = (root / "index.html").read_text(encoding="utf-8")
         about = (root / "about.html").read_text(encoding="utf-8")
 
-        self.assertIn("20+ YEARS INSIDE AUTOMOTIVE RETAIL", homepage)
+        self.assertIn("20+ YEARS HELPING SMALL BUSINESSES", homepage)
         self.assertIn("EXPERIENCE YOU CAN USE TODAY", homepage)
-        self.assertIn("More than 20 years inside automotive retail", homepage)
+        self.assertIn("More than 20 years helping small businesses", homepage)
+        self.assertIn("deep experience in the automotive sector", homepage)
         self.assertNotIn("The proof is already live.", homepage)
         self.assertNotIn("Four live website builds", homepage)
-        self.assertIn("more than 20 years of hands-on dealership expertise", about)
+        self.assertIn("more than 20 years of hands-on experience helping small businesses", about)
+        self.assertIn("deep work in the automotive sector", about)
         self.assertIn("he works on today", about)
 
     def test_site_presents_selected_work_without_proof_page_positioning(self):
