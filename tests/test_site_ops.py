@@ -141,6 +141,26 @@ class SiteOpsTests(unittest.TestCase):
         self.assertIn('http-equiv="refresh" content="0; url=work.html"', legacy)
         self.assertIn('rel="canonical" href="https://teejaystechtools.com/work.html"', legacy)
 
+    def test_autolister_offer_is_the_script_based_499_monthly_plan(self):
+        root = Path(__file__).resolve().parents[1]
+        offer = (root / "autolister.html").read_text(encoding="utf-8")
+        products = (root / "products.html").read_text(encoding="utf-8")
+        terms = (root / "dealerlister-terms.html").read_text(encoding="utf-8")
+        runtime = (root / "site.js").read_text(encoding="utf-8")
+
+        self.assertIn("$499 <small>per month</small>", offer)
+        self.assertIn("One dealership rooftop", offer)
+        self.assertIn("AutoLister uses scripts, not AI", offer)
+        self.assertIn("Dealer feed or compatible website connection", offer)
+        self.assertIn("dashboard-triggered reconciliation", offer)
+        self.assertIn("$499 per month", products)
+        self.assertIn("The subscription is $499 per month", terms)
+
+        combined = offer + products + terms + runtime
+        self.assertNotIn("$49.95", combined)
+        self.assertNotIn("square.link/u/z80DY7GC", combined)
+        self.assertNotIn("api/checkout/session", runtime)
+
     def test_work_hub_features_six_live_sites_and_separate_business_systems(self):
         root = Path(__file__).resolve().parents[1]
         work = (root / "work.html").read_text(encoding="utf-8")
