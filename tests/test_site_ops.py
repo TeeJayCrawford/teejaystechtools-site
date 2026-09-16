@@ -153,6 +153,8 @@ class SiteOpsTests(unittest.TestCase):
         self.assertIn("AutoLister uses scripts, not AI", offer)
         self.assertIn("Dealer feed or compatible website connection", offer)
         self.assertIn("dashboard-triggered reconciliation", offer)
+        self.assertIn("assets/TeeJays-AutoLister-Dealer-Onboarding-Packet.pdf", offer)
+        self.assertTrue((root / "assets" / "TeeJays-AutoLister-Dealer-Onboarding-Packet.pdf").is_file())
         self.assertIn("$499 per month", products)
         self.assertIn("The subscription is $499 per month", terms)
 
