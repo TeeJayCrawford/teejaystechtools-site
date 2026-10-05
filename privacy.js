@@ -13,6 +13,7 @@
   };
   const gpcEnabled = navigator.globalPrivacyControl === true;
   const deniedPreferences = { analytics: false, advertising: false };
+  const saveErrorMessage = 'We could not save your choice in this browser. Optional analytics and advertising are off on this page. Enable cookies and try again to save your choice for future pages.';
 
   let analyticsLoaded = false;
   let banner;
@@ -23,6 +24,7 @@
   let advertisingInput;
   let draft = { analytics: false, advertising: false };
   let lastPrivacyControl;
+  let unsavedChoice = false;
 
   window.dataLayer = window.dataLayer || [];
   window.gtag = window.gtag || function () {
@@ -49,25 +51,25 @@
   }
 
   function readPreferences() {
-    const encoded = document.cookie.split(';').map(function (entry) {
-      return entry.trim();
-    }).find(function (entry) {
-      return entry.indexOf(CHOICE_COOKIE + '=') === 0;
-    });
-    if (!encoded) return null;
-
-    const value = decodeURIComponent(encoded.slice(CHOICE_COOKIE.length + 1));
-    if (value === 'allow' || value === 'reject') {
-      return {
-        analytics: value === 'allow',
-        advertising: false,
-        gpc: false,
-        savedAt: '',
-        version: 1
-      };
-    }
-
     try {
+      const encoded = document.cookie.split(';').map(function (entry) {
+        return entry.trim();
+      }).find(function (entry) {
+        return entry.indexOf(CHOICE_COOKIE + '=') === 0;
+      });
+      if (!encoded) return null;
+
+      const value = decodeURIComponent(encoded.slice(CHOICE_COOKIE.length + 1));
+      if (value === 'allow' || value === 'reject') {
+        return {
+          analytics: value === 'allow',
+          advertising: false,
+          gpc: false,
+          savedAt: '',
+          version: 1
+        };
+      }
+
       const parsed = JSON.parse(value);
       if (
         parsed.version !== 1
@@ -83,30 +85,46 @@
   }
 
   function writePreferences(preferences) {
-    const value = encodeURIComponent(JSON.stringify({
+    const choice = {
       analytics: preferences.analytics,
       advertising: preferences.advertising,
       gpc: gpcEnabled,
       savedAt: new Date().toISOString(),
       version: 1
-    }));
+    };
+    const value = encodeURIComponent(JSON.stringify(choice));
     const secure = window.location.protocol === 'https:' ? '; Secure' : '';
 
-    // Remove a legacy host-only cookie before writing the shared apex/www cookie.
-    document.cookie = CHOICE_COOKIE + '=; Max-Age=0; Path=/; SameSite=Lax' + secure;
-    document.cookie = CHOICE_COOKIE + '=' + value
-      + '; Max-Age=' + CHOICE_MAX_AGE
-      + '; Path=/; SameSite=Lax'
-      + privacyCookieDomain()
-      + secure;
+    try {
+      // Remove a legacy host-only cookie before writing the shared apex/www cookie.
+      document.cookie = CHOICE_COOKIE + '=; Max-Age=0; Path=/; SameSite=Lax' + secure;
+      document.cookie = CHOICE_COOKIE + '=' + value
+        + '; Max-Age=' + CHOICE_MAX_AGE
+        + '; Path=/; SameSite=Lax'
+        + privacyCookieDomain()
+        + secure;
+      const stored = readPreferences();
+      return Boolean(stored
+        && stored.analytics === choice.analytics
+        && stored.advertising === choice.advertising
+        && stored.gpc === choice.gpc
+        && stored.savedAt === choice.savedAt);
+    } catch (error) {
+      return false;
+    }
   }
 
   function deleteOptionalGoogleCookies() {
-    const names = document.cookie.split(';').map(function (entry) {
-      return entry.trim().split('=')[0];
-    }).filter(function (name) {
-      return /^_(?:ga|gid|gat|gac_|gcl_)/i.test(name);
-    });
+    let names;
+    try {
+      names = document.cookie.split(';').map(function (entry) {
+        return entry.trim().split('=')[0];
+      }).filter(function (name) {
+        return /^_(?:ga|gid|gat|gac_|gcl_)/i.test(name);
+      });
+    } catch (error) {
+      return;
+    }
     const hostname = window.location.hostname.toLowerCase();
     const domains = ['', hostname];
     if (hostname === 'teejaystechtools.com' || hostname.endsWith('.teejaystechtools.com')) {
@@ -115,8 +133,12 @@
 
     names.forEach(function (name) {
       domains.forEach(function (domain) {
-        document.cookie = name + '=; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Max-Age=0; Path=/'
-          + (domain ? '; Domain=' + domain : '') + '; SameSite=Lax';
+        try {
+          document.cookie = name + '=; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Max-Age=0; Path=/'
+            + (domain ? '; Domain=' + domain : '') + '; SameSite=Lax';
+        } catch (error) {
+          // Consent still stays denied when the browser rejects cookie deletion.
+        }
       });
     });
   }
@@ -141,7 +163,10 @@
   }
 
   function loadAnalytics() {
-    if (analyticsLoaded || document.querySelector('script[data-optional-analytics="true"]')) return;
+    if (analyticsLoaded || document.querySelector('script[data-optional-analytics="true"]')) {
+      window.__tttAnalyticsLoaded = true;
+      return;
+    }
     analyticsLoaded = true;
     window.__tttAnalyticsLoaded = true;
     window.gtag('js', new Date());
@@ -161,6 +186,7 @@
 
   function applyPreferences(requested) {
     const effective = effectivePreferences(requested);
+    window['ga-disable-' + ANALYTICS_ID] = !effective.analytics;
     updateGoogleConsent(effective);
     if (effective.analytics) {
       loadAnalytics();
@@ -196,6 +222,7 @@
       + '<h2>Choose how TeeJay\'s Tech Tools uses cookies.</h2>'
       + '<p>Essential cookies keep the site secure and remember your choice. Analytics and advertising stay off unless you allow them. Square scheduling and checkout load only when you choose those services. Read our <a href="'
       + privacyUrl + '#website-analytics">Cookie &amp; Privacy Policy</a>.</p>'
+      + '<p class="privacy-save-error" role="alert" hidden>' + saveErrorMessage + '</p>'
       + (gpcEnabled
         ? '<strong class="privacy-gpc-notice">' + icon('privacy-shield-check.svg', 'privacy-inline-icon') + 'Global Privacy Control detected and honored. Advertising remains off.</strong>'
         : '')
@@ -233,7 +260,8 @@
       + preferenceRow('privacy-service-tools', 'Booking &amp; payment tools', 'Square scheduling and checkout load only on pages where you request those services. Square\'s provider notices and controls also apply.', { checked: true, disabled: true })
       + preferenceRow('privacy-analytics', 'Analytics', 'Helps us understand page and site interactions in aggregate through GA4. No form fields or customer contact details are sent.', { checked: false, disabled: false })
       + preferenceRow('privacy-advertising', 'Advertising', 'Reserved for future advertising measurement. No advertising pixels are active in this release.', { checked: false, disabled: gpcEnabled })
-      + '</div><footer><div><a href="' + privacyUrl + '">Privacy Policy</a><a href="' + privacyUrl + '#notice-at-collection">Notice at Collection</a></div>'
+      + '</div><p class="privacy-save-error" role="alert" hidden>' + saveErrorMessage + '</p>'
+      + '<footer><div><a href="' + privacyUrl + '">Privacy Policy</a><a href="' + privacyUrl + '#notice-at-collection">Notice at Collection</a></div>'
       + '<button data-privacy-action="save" type="button">Save choices</button></footer></section>';
     document.body.appendChild(layer);
     return layer;
@@ -270,12 +298,14 @@
   }
 
   function openPreferences() {
-    const stored = readPreferences();
+    clearSaveError();
+    const stored = unsavedChoice ? null : readPreferences();
     draft = stored
       ? { analytics: stored.analytics, advertising: stored.advertising && !gpcEnabled }
       : { analytics: false, advertising: false };
     renderDraft();
     backdrop.hidden = false;
+    if (unsavedChoice) backdrop.querySelector('.privacy-save-error').hidden = false;
     document.body.classList.add('privacy-modal-open');
     closeButton.focus({ preventScroll: true });
   }
@@ -286,10 +316,23 @@
     if (lastPrivacyControl) lastPrivacyControl.focus({ preventScroll: true });
   }
 
+  function clearSaveError() {
+    banner.querySelector('.privacy-save-error').hidden = true;
+    backdrop.querySelector('.privacy-save-error').hidden = true;
+  }
+
   function save(requested) {
     const analyticsWasLoaded = analyticsLoaded || Boolean(document.querySelector('script[data-optional-analytics="true"]'));
-    const effective = applyPreferences(requested);
-    writePreferences(effective);
+    const effective = effectivePreferences(requested);
+    clearSaveError();
+    if (!writePreferences(effective)) {
+      unsavedChoice = true;
+      applyPreferences(deniedPreferences);
+      (backdrop.hidden ? banner : backdrop).querySelector('.privacy-save-error').hidden = false;
+      return;
+    }
+    unsavedChoice = false;
+    applyPreferences(effective);
     draft = effective;
     closePreferences();
     showTrigger();

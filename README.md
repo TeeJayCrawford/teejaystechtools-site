@@ -1,5 +1,7 @@
 # TeeJay's Tech Tools site
 
+Before code changes or a release, review the [workspace known issues and habits index](../../00%20-%20START%20HERE/KNOWN%20ISSUES%20AND%20HABITS/INDEX.md).
+
 Static multi-page website for free hosting on GitHub Pages.
 
 ## Pages

@@ -20,3 +20,8 @@ jobs:
         run: python3 ops/site_ops.py audit .
       - name: Run site operations tests
         run: python3 -m unittest discover -s tests
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Run privacy runtime tests
+        run: node --test tests/privacy_runtime.test.cjs

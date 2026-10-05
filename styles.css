@@ -2452,6 +2452,22 @@ h3 {
   line-height: 1.55;
 }
 
+.privacy-banner-copy > .privacy-save-error,
+.privacy-dialog .privacy-save-error {
+  margin: 12px 0 0;
+  padding: 10px 12px;
+  border: 1px solid #e8b4a7;
+  border-radius: 8px;
+  background: #fff4f1;
+  color: #8c2d1e;
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+.privacy-save-error[hidden] {
+  display: none;
+}
+
 .privacy-banner a,
 .privacy-dialog a {
   color: #175fca;
