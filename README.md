@@ -1,6 +1,6 @@
 # TeeJay's Tech Tools site
 
-Before code changes or a release, review the [workspace known issues and habits index](../../00%20-%20START%20HERE/KNOWN%20ISSUES%20AND%20HABITS/INDEX.md).
+Before code changes or a release, follow [the project guidance](AGENTS.md). In the Documents workspace, review `/Users/atlas/Documents/TeeJay's Tech Tools/00 - START HERE/KNOWN ISSUES AND HABITS/INDEX.md` and the relevant open entries.
 
 Static multi-page website for free hosting on GitHub Pages.
 
