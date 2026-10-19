@@ -83,12 +83,12 @@ class SiteOpsTests(unittest.TestCase):
         source = (root / "index.html").read_text(encoding="utf-8")
         hero = source.split('<section class="hero-section">', 1)[1].split("</section>", 1)[0]
 
-        self.assertIn("Built for the way your business works.", hero)
-        self.assertIn("20+ YEARS HELPING SMALL BUSINESSES", hero)
+        self.assertIn("Built around the inventory you sell.", hero)
+        self.assertIn("POWERSPORTS + AUTOMOTIVE DEALER WEBSITES", hero)
         self.assertNotIn("Four live builds now prove it", hero)
-        self.assertIn('href="contact.html?service=not-sure"', hero)
-        self.assertIn("Talk with TeeJay", hero)
-        self.assertEqual(hero.count('class="button '), 1)
+        self.assertIn('href="dealer-websites.html"', hero)
+        self.assertIn('href="contact.html?service=feed-backed-dealer-website"', hero)
+        self.assertEqual(hero.count('class="button '), 2)
         self.assertIn("Lead Delivery", hero)
         self.assertIn("Route every shopper inquiry", hero)
         self.assertNotIn("Google Ads", hero)
@@ -104,7 +104,7 @@ class SiteOpsTests(unittest.TestCase):
         homepage = (root / "index.html").read_text(encoding="utf-8")
         about = (root / "about.html").read_text(encoding="utf-8")
 
-        self.assertIn("20+ YEARS HELPING SMALL BUSINESSES", homepage)
+        self.assertIn("POWERSPORTS + AUTOMOTIVE DEALER WEBSITES", homepage)
         self.assertIn("EXPERIENCE YOU CAN USE TODAY", homepage)
         self.assertIn("More than 20 years helping small businesses", homepage)
         self.assertIn("deep experience in the automotive sector", homepage)
@@ -166,12 +166,13 @@ class SiteOpsTests(unittest.TestCase):
         self.assertNotIn("square.link/u/z80DY7GC", combined)
         self.assertNotIn("api/checkout/session", runtime)
 
-    def test_work_hub_features_six_live_sites_and_separate_business_systems(self):
+    def test_work_hub_features_seven_live_sites_and_separate_business_systems(self):
         root = Path(__file__).resolve().parents[1]
         work = (root / "work.html").read_text(encoding="utf-8")
 
         projects = (
             ("Pettus Automotive", "https://pettusauto.com/", "work/pettus-automotive.html"),
+            ("Beck Disposal", "https://beckdisposal.com/", "work/beck-disposal.html"),
             ("Curtis Glass Center", "https://parkhillsautoglass.com/", "work/curtis-glass-center.html"),
             ("Talley Tint and Customs", "https://www.talleytintandcustoms.com/", "work/talley-tint-customs.html"),
             ("Get More For Your Trade", "https://getmoreforyourtrade.com/", "work/get-more-for-your-trade.html"),
@@ -179,8 +180,8 @@ class SiteOpsTests(unittest.TestCase):
             ("APG Customs", "https://apgcustoms.com/", "work/apg-customs.html"),
         )
 
-        self.assertEqual(work.count('<article class="portfolio-project'), 6)
-        self.assertEqual(work.count("Live website</span>"), 6)
+        self.assertEqual(work.count('<article class="portfolio-project'), 7)
+        self.assertEqual(work.count("Live website</span>"), 7)
         for name, public_url, case_path in projects:
             self.assertIn(name, work)
             self.assertIn(public_url, work)
@@ -195,7 +196,7 @@ class SiteOpsTests(unittest.TestCase):
             "Google Ads &amp; campaign operations",
             "Custom dealer software",
             "Dealer Command System",
-            "DealerLister &amp; AutoLister",
+            "AutoLister",
             "Reputation &amp; local visibility",
         ):
             self.assertIn(capability, work)
@@ -212,13 +213,14 @@ class SiteOpsTests(unittest.TestCase):
         self.assertIn("custom trucks, Jeeps, Broncos, recent builds", apg)
         self.assertIn("start-your-build inquiry", apg)
 
-    def test_homepage_presents_two_audiences_and_one_simple_process(self):
+    def test_homepage_presents_three_audiences_and_one_simple_process(self):
         root = Path(__file__).resolve().parents[1]
         source = (root / "index.html").read_text(encoding="utf-8")
-        self.assertIn("Two lanes. One practical approach.", source)
-        self.assertIn('href="dealerships.html"', source)
+        self.assertIn("Choose your starting point.", source)
+        self.assertIn('href="powersports-websites.html"', source)
+        self.assertIn('href="car-dealership-websites.html"', source)
         self.assertIn('href="small-business.html"', source)
-        self.assertEqual(source.count('class="clarity-audience-card"'), 2)
+        self.assertEqual(source.count('class="clarity-audience-card"'), 3)
         self.assertEqual(source.count('class="clarity-process"'), 1)
         for step in ("Start with the real problem", "Map the operation", "Build, launch, improve"):
             self.assertIn(step, source)
@@ -227,7 +229,7 @@ class SiteOpsTests(unittest.TestCase):
         self.assertNotIn('class="proof-section"', source)
         self.assertIn('"@type": "Organization"', source)
         self.assertNotIn('"@type": "ProfessionalService"', source)
-        self.assertEqual(source.count("Talk with TeeJay"), 5)
+        self.assertEqual(source.count("Talk with TeeJay"), 4)
 
     def test_homepage_shows_four_uncropped_live_sites_without_a_proof_section(self):
         root = Path(__file__).resolve().parents[1]
@@ -248,7 +250,8 @@ class SiteOpsTests(unittest.TestCase):
         self.assertIn("SELECTED LIVE WORK", selected_work)
         self.assertIn("pettus-trailers-clean-720.webp", selected_work)
         self.assertIn("apg-customs-clean-540.webp", selected_work)
-        self.assertIn("pettus-automotive-live-720.jpg", selected_work)
+        self.assertIn('pettus-automotive-live.jpg" width="1280" height="720"', selected_work)
+        self.assertIn('href="work/beck-disposal.html"', selected_work)
         self.assertIn('getmore-home.png" width="1440" height="898"', selected_work)
         self.assertNotIn('class="proof-section"', source)
 
@@ -259,7 +262,6 @@ class SiteOpsTests(unittest.TestCase):
         styles = (root / "styles.css").read_text(encoding="utf-8")
 
         for dimensions in (
-            'width="1200" height="675"',
             'width="1280" height="720"',
             'width="1440" height="810"',
             'width="1080" height="608"',

@@ -16,15 +16,17 @@
     if (label === 'Work') return /\/work(?:\.html|\/)/.test(currentPath);
     if (label === 'Small Business') return /\/small-business\.html$/.test(currentPath);
     if (label === 'About') return /\/about\.html$/.test(currentPath);
-    if (label === 'Dealerships') {
-      return /\/(dealerships|dealer-websites|inventory-|custom-dealer|dealer-command|autolister|reputation-|marketing-truth)/.test(currentPath);
+    if (label === 'AutoLister') return /\/autolister\.html$/.test(currentPath);
+    if (label === 'Dealer Websites') {
+      return /\/(dealerships|dealer-websites|powersports-websites|car-dealership-websites)\.html$/.test(currentPath);
     }
     return false;
   }
 
   if (nav) {
     const primaryLinks = [
-      ['Dealerships', 'dealerships.html'],
+      ['Dealer Websites', 'dealer-websites.html'],
+      ['AutoLister', 'autolister.html'],
       ['Small Business', 'small-business.html'],
       ['Work', 'work.html'],
       ['About', 'about.html']
@@ -36,7 +38,7 @@
   }
 
   const headerCta = document.querySelector('.nav-cta');
-  if (headerCta) {
+  if (headerCta && !headerCta.hasAttribute('data-preserve-nav-cta')) {
     headerCta.href = rootPrefix + 'contact.html?service=not-sure';
     headerCta.textContent = 'Talk with TeeJay';
   }
@@ -44,7 +46,8 @@
   const footerLinks = document.querySelector('.footer-links');
   if (footerLinks) {
     footerLinks.innerHTML = [
-      ['Dealerships', 'dealerships.html'],
+      ['Dealer Websites', 'dealer-websites.html'],
+      ['AutoLister', 'autolister.html'],
       ['Small Business', 'small-business.html'],
       ['Work', 'work.html'],
       ['About', 'about.html'],
